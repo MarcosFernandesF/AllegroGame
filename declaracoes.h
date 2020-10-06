@@ -10,3 +10,4 @@
 
 void error_msg(char *mensagem);
 int inicializar();
+void sprite();
