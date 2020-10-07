@@ -3,8 +3,8 @@
 const int width = 800;
 const int height = 400;
 const int FPS = 60;
-enum KEYS { CIMA, BAIXO, ESQUERDA, DIREITA, ESPAÇO, CLICK};
-bool keys[6] = { false, false, false ,false , false, false };
+enum keys { PULO, ESQUERDA, DIREITA, ESPACO};
+bool keys[6] = { false ,false , false, false };
 
 ALLEGRO_DISPLAY* display = NULL;
 ALLEGRO_EVENT_QUEUE* fila_eventos = NULL;
@@ -12,22 +12,15 @@ ALLEGRO_TIMER* timer = NULL;
 ALLEGRO_BITMAP* folha_sprites = NULL;
 ALLEGRO_BITMAP* fundo = NULL;
 
-int altura_sprite = 32, largura_sprite = 32;
-int colunas_folha = 4, coluna_atual = 0;
-int linhas_folha = 1, linha_atual = 0;
-int regiao_x_folha = 0, regiao_y_folha = 0;
-int frames_sprite = 200000, cont_frames = 0;
-int pos_x_sprite = 50, pos_y_sprite = 150;
-int vel_x_sprite = 4, vel_y_sprite = 0;
-
 int main()
 {
-
 	bool redraw = true;
 	bool done = false;
 	
 
-
+	struct Sprite mulher;
+	struct Personagem principal;
+	init_mulher(&mulher, &principal);
 
 	if (inicializar() != 1)
 	{
@@ -44,25 +37,19 @@ int main()
 		{
 			redraw = true;
 
-			sprite();
+			sprites(&mulher, &principal);
 
-			if (keys[CIMA])
-				al_clear_to_color(al_map_rgb(255, 0, 0));
-			if (keys[BAIXO])
-				al_clear_to_color(al_map_rgb(0, 255, 0));
+			if (keys[PULO])
+				printf("oi");
 			if (keys[ESQUERDA])
-				printf("ESQUERDA");
+				printf("oi");
 			if (keys[DIREITA])
-				printf("DIREITA");
-			if (keys[ESPAÇO])
-				printf("ESPAÇO");
-			if (keys[CLICK])
-				printf("CLICK");
-		}
-
-		else if (evento.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
-		{
-			done = true;
+			{
+				principal.pos_x_sprite += principal.vel_x_sprite;
+			}
+				
+			if (keys[ESPACO])
+				printf("oi");
 		}
 
 		else if (evento.type == ALLEGRO_EVENT_KEY_DOWN)
@@ -72,20 +59,17 @@ int main()
 			case ALLEGRO_KEY_ESCAPE:
 				done = true;
 				break;
-			case ALLEGRO_KEY_W:
-				keys[CIMA] = true;
+			case ALLEGRO_KEY_UP:
+				keys[PULO] = true;
 				break;
-			case ALLEGRO_KEY_S:
-				keys[BAIXO] = true;
-				break;
-			case ALLEGRO_KEY_A:
+			case ALLEGRO_KEY_LEFT:
 				keys[ESQUERDA] = true;
 				break;
-			case ALLEGRO_KEY_D:
+			case ALLEGRO_KEY_RIGHT:
 				keys[DIREITA] = true;
 				break;
 			case ALLEGRO_KEY_SPACE:
-				keys[ESPAÇO] = true;
+				keys[ESPACO] = true;
 				break;
 			}
 		}
@@ -96,20 +80,17 @@ int main()
 			case ALLEGRO_KEY_ESCAPE:
 				done = true;
 				break;
-			case ALLEGRO_KEY_W:
-				keys[CIMA] = false;
+			case ALLEGRO_KEY_UP:
+				keys[PULO] = false;
 				break;
-			case ALLEGRO_KEY_S:
-				keys[BAIXO] = false;
-				break;
-			case ALLEGRO_KEY_A:
+			case ALLEGRO_KEY_LEFT:
 				keys[ESQUERDA] = false;
 				break;
-			case ALLEGRO_KEY_D:
+			case ALLEGRO_KEY_RIGHT:
 				keys[DIREITA] = false;
 				break;
 			case ALLEGRO_KEY_SPACE:
-				keys[ESPAÇO] = false;
+				keys[ESPACO] = false;
 				break;
 			}
 		}
@@ -117,13 +98,18 @@ int main()
 		{
 			if (evento.mouse.x <= width && evento.mouse.x >= 0 &&
 				evento.mouse.y <= height && evento.mouse.y >= 0)
-				keys[CLICK] = true;
+				printf("click");
 		}
 		else if (evento.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP)
 		{
 			if (evento.mouse.x <= width && evento.mouse.x >= 0 &&
 				evento.mouse.y <= height && evento.mouse.y >= 0)
-				keys[CLICK] = false;
+				printf("click");
+		}
+
+		else if (evento.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
+		{
+			done = true;
 		}
 			
 		if (redraw && al_is_event_queue_empty(fila_eventos)) 
@@ -133,18 +119,21 @@ int main()
 			al_draw_bitmap_region(fundo, 0, 0, width, height, 0, 0, 0);
 
 
-			if (vel_x_sprite > 0)
+			if (principal.vel_x_sprite > 0)
 			{
-				al_draw_bitmap_region(folha_sprites, regiao_x_folha,
-					regiao_y_folha, largura_sprite, altura_sprite, pos_x_sprite, pos_y_sprite, 0);
+				al_draw_scaled_bitmap(folha_sprites,
+					mulher.regiao_x_folha, mulher.regiao_y_folha,
+					principal.largura_sprite, principal.altura_sprite,
+					principal.pos_x_sprite + principal.largura_sprite, principal.pos_y_sprite,
+					principal.largura_sprite + 80, principal.altura_sprite + 80, 0);
 			}
 			else
 			{
 				al_draw_scaled_bitmap(folha_sprites,
-					regiao_x_folha, regiao_y_folha,
-					largura_sprite, altura_sprite,
-					pos_x_sprite + largura_sprite, pos_y_sprite,
-					-largura_sprite, altura_sprite, 0);
+					mulher.regiao_x_folha, mulher.regiao_y_folha,
+					principal.largura_sprite, principal.altura_sprite,
+					principal.pos_x_sprite + principal.largura_sprite, principal.pos_y_sprite,
+					-principal.largura_sprite - 80, principal.altura_sprite + 80, 0);
 			}
 			al_flip_display();
 			redraw = 0;
@@ -198,7 +187,7 @@ int inicializar()
 	}
 
 
-	timer = al_create_timer(1 / FPS); // Criando o timer
+	timer = al_create_timer(1.0 / FPS); // Criando o timer
 	if (!timer)
 	{
 		error_msg("Falha ao criar o timer");
@@ -212,14 +201,14 @@ int inicializar()
 		return -1;
 	}
 
-	folha_sprites = al_load_bitmap("Owlet_Monster_Attack1_4.png"); // Carregando a folha de sprites
+	folha_sprites = al_load_bitmap("sprites/Mulher-aventureira.png"); // Carregando a folha de sprites
 	if (!folha_sprites)
 	{
 		error_msg("Falha ao carregar a folha de sprites");
 		return -1;
 	}
 
-	fundo = al_load_bitmap("background.png"); //Carregando o backgrounde do jogo
+	fundo = al_load_bitmap("sprites/background.png"); //Carregando o background do jogo
 	if (!fundo)
 	{
 		error_msg("Falha ao carregar o fundo do jogo");
@@ -235,29 +224,5 @@ int inicializar()
 	return 1;
 }
 
-void sprite() 
-{
-	cont_frames++;
-	if (cont_frames >= frames_sprite)
-	{
-		cont_frames = 0;
 
-		coluna_atual++;
-
-		if (coluna_atual >= colunas_folha)
-		{
-			coluna_atual = 0;
-
-			linha_atual = (linha_atual + 1) % linhas_folha;
-
-			regiao_y_folha = linha_atual * altura_sprite;
-		}
-
-		regiao_x_folha = coluna_atual * largura_sprite;
-	}
-	if (pos_x_sprite + largura_sprite > width - 20 || pos_x_sprite < 20)
-	{
-		vel_x_sprite = -vel_x_sprite;
-	}
-}
 
