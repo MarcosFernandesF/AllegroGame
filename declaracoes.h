@@ -7,6 +7,8 @@
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_native_dialog.h>
 #include <stdio.h>
+#define width 1000
+#define height 750
 
 
 struct Sprite
@@ -30,10 +32,13 @@ struct Personagem
 	int frames_sprite;
 	int cont_frames;
 };
-
+// Mensagem de erro
 void error_msg(char *mensagem);
+// Inicialização do Programa
 int inicializar();
-void sprites(struct Sprite* mulher, struct Personagem* principal);
+// Função responsável por animar
+void animacao(struct Sprite* mulher, struct Personagem* principal, int coluna_acao, int coluna_atual2, int linha_acao, int linha_atual2);
+// Inicialização do Personagem Principal
 void init_mulher(struct Sprite* mulher, struct Personagem* principal);
 
 
