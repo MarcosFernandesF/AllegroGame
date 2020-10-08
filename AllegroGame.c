@@ -1,10 +1,8 @@
 #include "declaracoes.h"
 
-const int width = 800;
-const int height = 400;
-const int FPS = 60;
-enum keys { PULO, ESQUERDA, DIREITA, ESPACO};
-bool keys[6] = { false ,false , false, false };
+const int FPS = 60;						     							
+enum keys { PULO, ESQUERDA, DIREITA, ESPACO, DIRECAO, GRAVIDADE};
+bool keys[6] = { false ,false , false, false, true, false };
 
 ALLEGRO_DISPLAY* display = NULL;
 ALLEGRO_EVENT_QUEUE* fila_eventos = NULL;
@@ -16,10 +14,10 @@ int main()
 {
 	bool redraw = true;
 	bool done = false;
-	
 
 	struct Sprite mulher;
 	struct Personagem principal;
+
 	init_mulher(&mulher, &principal);
 
 	if (inicializar() != 1)
@@ -32,24 +30,55 @@ int main()
 	{
 		ALLEGRO_EVENT evento;
 		al_wait_for_event(fila_eventos, &evento);
+		bool parado = true;
+		int pos_y_atual = 0;
 
 		if (evento.type == ALLEGRO_EVENT_TIMER)
 		{
 			redraw = true;
 
-			sprites(&mulher, &principal);
-
+			if (parado)
+			{
+				animacao(&mulher, &principal, 6, 0, 0, 0);
+			}
+			
 			if (keys[PULO])
-				printf("oi");
+			{
+				int col_acao = 8, linha_acao = 1, linha_atual2 = 1, col_atual2 = 1;
+				parado = false;
+				animacao(&mulher, &principal, 8, 1, 1, 1);
+				principal.pos_y_sprite -= principal.vel_y_sprite;
+				pos_y_atual = principal.pos_y_sprite;
+				keys[GRAVIDADE] = true;
+			}
+			if (!keys[PULO])
+			{
+				principal.pos_y_sprite += principal.vel_y_sprite;
+				if (pos_y_atual <= height / 2)
+					principal.pos_y_sprite = height / 2;
+			}
+			
 			if (keys[ESQUERDA])
-				printf("oi");
+			{
+				int col_acao = 8, linha_acao = 1, linha_atual2 = 1, col_atual2 = 1;
+				parado = false;
+				keys[DIRECAO]= false;
+				animacao(&mulher, &principal, col_acao, col_atual2, linha_acao, linha_atual2);
+				principal.pos_x_sprite -= principal.vel_x_sprite;
+			}			
 			if (keys[DIREITA])
 			{
+				parado = false;
+				keys[DIRECAO] = true;
+				int col_acao = 8, linha_acao = 1, linha_atual2 = 1, col_atual2 = 1;
+				animacao(&mulher, &principal, col_acao, col_atual2, linha_acao, linha_atual2);
 				principal.pos_x_sprite += principal.vel_x_sprite;
 			}
 				
 			if (keys[ESPACO])
+			{
 				printf("oi");
+			}
 		}
 
 		else if (evento.type == ALLEGRO_EVENT_KEY_DOWN)
@@ -116,11 +145,12 @@ int main()
 		{
 			redraw = false;
 
-			al_draw_bitmap_region(fundo, 0, 0, width, height, 0, 0, 0);
+			al_draw_scaled_bitmap(fundo, 0, 0, 1024, 383, 0, 0,width,height, 0);
 
 
-			if (principal.vel_x_sprite > 0)
+			if (keys[DIRECAO])
 			{
+				// Boneco para um lado
 				al_draw_scaled_bitmap(folha_sprites,
 					mulher.regiao_x_folha, mulher.regiao_y_folha,
 					principal.largura_sprite, principal.altura_sprite,
@@ -129,11 +159,12 @@ int main()
 			}
 			else
 			{
+				// Boneco ao contrario
 				al_draw_scaled_bitmap(folha_sprites,
 					mulher.regiao_x_folha, mulher.regiao_y_folha,
 					principal.largura_sprite, principal.altura_sprite,
 					principal.pos_x_sprite + principal.largura_sprite, principal.pos_y_sprite,
-					-principal.largura_sprite - 80, principal.altura_sprite + 80, 0);
+					principal.largura_sprite + 80 , principal.altura_sprite + 80, ALLEGRO_FLIP_HORIZONTAL);
 			}
 			al_flip_display();
 			redraw = 0;
