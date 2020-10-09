@@ -11,6 +11,7 @@
 #define height 750
 
 
+
 struct Sprite
 {
 	int colunas_folha;
@@ -37,8 +38,13 @@ void error_msg(char *mensagem);
 // Inicialização do Programa
 int inicializar();
 // Função responsável por animar
-void animacao(struct Sprite* mulher, struct Personagem* principal, int coluna_acao, int coluna_atual2, int linha_acao, int linha_atual2);
+void animacao(struct Sprite* sprite, struct Personagem* beth_jack, int coluna_max, int linha_atual_2); // Struct Ponteiros
+void animacao2(struct Sprite sprite[], struct Personagem inimigo[], int coluna_max, int linha_atual_2, int indice); // Struct vetor
 // Inicialização do Personagem Principal
-void init_mulher(struct Sprite* mulher, struct Personagem* principal);
+void init_elisabeth(struct Sprite* elisabeth, struct Personagem* principal);
+// Inicializando inimigos no mapa
+void init_inimigos(struct Sprite monstro[], struct Personagem secundario[], int indice);
+// Tirando os inimigos do mapa
+void reset_inimigos(struct Sprite monstro[], struct Personagem secundario[]);
 
 
