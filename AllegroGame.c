@@ -1,6 +1,6 @@
 #include "declaracoes.h"
 
-const int FPS = 60;						     							
+const int FPS = 60;
 enum keys { PULO, ESQUERDA, DIREITA, ESPACO, DIRECAO, GRAVIDADE};
 bool keys[6] = { false ,false , false, false, true, false };
 
@@ -9,16 +9,68 @@ ALLEGRO_EVENT_QUEUE* fila_eventos = NULL;
 ALLEGRO_TIMER* timer = NULL;
 ALLEGRO_BITMAP* folha_sprites = NULL;
 ALLEGRO_BITMAP* fundo = NULL;
+ALLEGRO_BITMAP* folha_bloco = NULL;
+
+int mapa1[] = {5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                     3, 3, 3, 3, 3, 3, 3, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                     5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 3, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 3, 3, 3, 3, 3, 3, 3, 3,
+                     1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                     1, 1, 5, 5, 5, 5, 5, 5, 5, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                     3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 5, 5, 5, 5, 1,
+                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 1,
+                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 1, 1,
+                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 1, 1, 1,
+                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+int mapa2[] = {5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                     5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                     5, 5, 5, 5, 5, 5, 2, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                     5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 3, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 3, 3, 3, 4, 5, 5, 5,
+                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                     5, 5, 5, 5, 5, 5, 5, 5, 2, 3, 3, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                     5, 5, 5, 5, 2, 3, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+int mapa3[] = {5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 int main()
 {
 	bool redraw = true;
 	bool done = false;
+	int level=1;
 
+    struct Cenario mapa;
 	struct Sprite mulher;
 	struct Personagem principal;
 
 	init_mulher(&mulher, &principal);
+	InitCenario(&mapa);
 
 	if (inicializar() != 1)
 	{
@@ -41,7 +93,7 @@ int main()
 			{
 				animacao(&mulher, &principal, 6, 0, 0, 0);
 			}
-			
+
 			if (keys[PULO])
 			{
 				int col_acao = 8, linha_acao = 1, linha_atual2 = 1, col_atual2 = 1;
@@ -57,7 +109,7 @@ int main()
 				if (pos_y_atual <= height / 2)
 					principal.pos_y_sprite = height / 2;
 			}
-			
+
 			if (keys[ESQUERDA])
 			{
 				int col_acao = 8, linha_acao = 1, linha_atual2 = 1, col_atual2 = 1;
@@ -65,7 +117,7 @@ int main()
 				keys[DIRECAO]= false;
 				animacao(&mulher, &principal, col_acao, col_atual2, linha_acao, linha_atual2);
 				principal.pos_x_sprite -= principal.vel_x_sprite;
-			}			
+			}
 			if (keys[DIREITA])
 			{
 				parado = false;
@@ -74,7 +126,7 @@ int main()
 				animacao(&mulher, &principal, col_acao, col_atual2, linha_acao, linha_atual2);
 				principal.pos_x_sprite += principal.vel_x_sprite;
 			}
-				
+
 			if (keys[ESPACO])
 			{
 				printf("oi");
@@ -140,13 +192,43 @@ int main()
 		{
 			done = true;
 		}
-			
-		if (redraw && al_is_event_queue_empty(fila_eventos)) 
+
+		if (redraw && al_is_event_queue_empty(fila_eventos))
 		{
 			redraw = false;
 
-			al_draw_scaled_bitmap(fundo, 0, 0, 1024, 383, 0, 0,width,height, 0);
+			al_draw_scaled_bitmap(fundo, 0, 0, 576, 324, 0, 0,width,height, 0);
 
+			switch(level){
+        case 1:
+            for (int i = 0; i<mapa.MapaTam; i++)
+            {
+                al_draw_scaled_bitmap(folha_bloco, (mapa.BlocoTam) * (mapa1[i]), 0, mapa.BlocoTam, mapa.BlocoTam,
+                ((mapa.BlocoTam)+((mapa.BlocoTam)/2)) * (i%(mapa.MapaColuna)), ((mapa.BlocoTam)+((mapa.BlocoTam)/2)) * (i/(mapa.MapaColuna)),
+                 (mapa.BlocoTam)+((mapa.BlocoTam)/2), (mapa.BlocoTam)+((mapa.BlocoTam)/2), 0);
+			}
+			if(principal.pos_y_sprite<0 && principal.pos_x_sprite<0){
+              level++;}
+              break;
+        case 2:
+			for (int j = 0; j<mapa.MapaTam; j++)
+            {
+                al_draw_scaled_bitmap(folha_bloco, (mapa.BlocoTam) * (mapa2[j]), 0, mapa.BlocoTam, mapa.BlocoTam,
+                ((mapa.BlocoTam)+((mapa.BlocoTam)/2)) * (j%(mapa.MapaColuna)), ((mapa.BlocoTam)+((mapa.BlocoTam)/2)) * (j/(mapa.MapaColuna)),
+                 (mapa.BlocoTam)+((mapa.BlocoTam)/2), (mapa.BlocoTam)+((mapa.BlocoTam)/2), 0);
+			}
+			if(principal.pos_y_sprite<0 && principal.pos_x_sprite>1000){
+              level++;}
+			break;
+        case 3:
+            for (int i = 0; i<mapa.MapaTam; i++)
+            {
+                al_draw_scaled_bitmap(folha_bloco, (mapa.BlocoTam) * (mapa3[i]), 0, mapa.BlocoTam, mapa.BlocoTam,
+                ((mapa.BlocoTam)+((mapa.BlocoTam)/2)) * (i%(mapa.MapaColuna)), ((mapa.BlocoTam)+((mapa.BlocoTam)/2)) * (i/(mapa.MapaColuna)),
+                 (mapa.BlocoTam)+((mapa.BlocoTam)/2), (mapa.BlocoTam)+((mapa.BlocoTam)/2), 0);
+			}
+              break;
+        }
 
 			if (keys[DIRECAO])
 			{
@@ -170,14 +252,12 @@ int main()
 			redraw = 0;
 
 		}
-
-
-
 	}
 
 	al_destroy_display(display);
 	al_destroy_timer(timer);
 	al_destroy_bitmap(folha_sprites);
+	al_destroy_bitmap(folha_bloco);
 	al_destroy_event_queue(fila_eventos);
 
 	return 0;
@@ -239,7 +319,14 @@ int inicializar()
 		return -1;
 	}
 
-	fundo = al_load_bitmap("sprites/background.png"); //Carregando o background do jogo
+	folha_bloco = al_load_bitmap("sprites/blocos.png"); //Carrega blocos
+	if (!folha_bloco)
+	{
+		error_msg("Falha ao carregar a folha de blocos");
+		return -1;
+	}
+
+	fundo = al_load_bitmap("sprites/background1.png"); //Carregando o background do jogo
 	if (!fundo)
 	{
 		error_msg("Falha ao carregar o fundo do jogo");
@@ -254,6 +341,3 @@ int inicializar()
 
 	return 1;
 }
-
-
-
