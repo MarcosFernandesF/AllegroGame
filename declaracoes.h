@@ -10,7 +10,6 @@
 #define width 1000
 #define height 750
 
-
 struct Sprite
 {
 	int colunas_folha;
@@ -32,6 +31,13 @@ struct Personagem
 	int frames_sprite;
 	int cont_frames;
 };
+
+struct Cenario
+{
+    int MapaColuna;
+	int MapaTam;
+	int BlocoTam;
+};
 // Mensagem de erro
 void error_msg(char *mensagem);
 // Inicialização do Programa
@@ -40,5 +46,5 @@ int inicializar();
 void animacao(struct Sprite* mulher, struct Personagem* principal, int coluna_acao, int coluna_atual2, int linha_acao, int linha_atual2);
 // Inicialização do Personagem Principal
 void init_mulher(struct Sprite* mulher, struct Personagem* principal);
-
-
+//Inicializa mapas
+void InitCenario(struct Cenario* mapa);

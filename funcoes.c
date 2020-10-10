@@ -22,8 +22,6 @@ void init_mulher(struct Sprite* mulher, struct Personagem* principal)
 	mulher->linhas_folha = 1;
 	mulher->linha_atual = 0;
 }
-
-
 void animacao(struct Sprite* padrao, struct Personagem* qualquer, int coluna_acao, int linha_acao, int linha_atual2, int coluna_atual2)
 {
 	qualquer->cont_frames++;
@@ -45,5 +43,10 @@ void animacao(struct Sprite* padrao, struct Personagem* qualquer, int coluna_aca
 
 		padrao->regiao_x_folha = padrao->coluna_atual * qualquer->largura_sprite;
 	}
-	
+
+}
+void InitCenario(struct Cenario *mapa){
+    mapa->MapaColuna = 21;
+    mapa->MapaTam = 315;
+    mapa->BlocoTam = 32;
 }
