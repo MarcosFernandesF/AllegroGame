@@ -11,40 +11,43 @@
 #define height 750
 
 
-
-struct Sprite
+struct Acao
 {
-	int colunas_folha;
-	int coluna_atual;
-	int linhas_folha;
-	int linha_atual;
-	int regiao_x_folha;
-	int regiao_y_folha;
+	bool esqueleto;
+	int col_atual;
+	int col_atual_old;
+	int lin_atual;
+	int col_folha;
+	int lin_folha;
+	int frames_min;
+	int frames_max;
 };
 
 struct Personagem
 {
+	struct Acao animacao[5];
 	int altura_sprite;
 	int largura_sprite;
 	int pos_x_sprite;
 	int pos_y_sprite;
 	int vel_x_sprite;
 	int vel_y_sprite;
-	int frames_sprite;
-	int cont_frames;
+	int x_folha;
+	int y_folha;
 };
+
 // Mensagem de erro
 void error_msg(char *mensagem);
 // Inicialização do Programa
 int inicializar();
 // Função responsável por animar
-void animacao(struct Sprite* sprite, struct Personagem* beth_jack, int coluna_max, int linha_atual_2); // Struct Ponteiros
-void animacao2(struct Sprite sprite[], struct Personagem inimigo[], int coluna_max, int linha_atual_2, int indice); // Struct vetor
+void animacao_elisabeth1(struct Personagem* beth_jack, int acao);
+void animacao_inimigos(struct Personagem inimigos[], int acao, int indice);
 // Inicialização do Personagem Principal
-void init_elisabeth(struct Sprite* elisabeth, struct Personagem* principal);
-// Inicializando inimigos no mapa
-void init_inimigos(struct Sprite monstro[], struct Personagem secundario[], int indice);
+void init_elisabeth(struct Personagem* elisabeth);
+// Inicializando inimigos
+void init_dwarf(struct Personagem dwarf[]);
+void init_minotauro(struct Personagem minotauro[]);
+void init_esqueleto(struct Personagem esqueleto[]);
 // Tirando os inimigos do mapa
-void reset_inimigos(struct Sprite monstro[], struct Personagem secundario[]);
-
-
+void morte_inimigo(struct Sprite monstro[], struct Personagem secundario[], int indice);

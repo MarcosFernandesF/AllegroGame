@@ -1,35 +1,40 @@
 #include "declaracoes.h"
 
-const int FPS = 60;		
-const int num_inimigos = 2;
-enum keys { PULO, ESQUERDA, DIREITA, ESPACO, DIRECAO, GRAVIDADE};
+const int FPS = 60;
+const int num_inimigos = 3;
+
+enum keys { PULO, ESQUERDA, DIREITA, ESPACO, DIRECAO, GRAVIDADE };
 bool keys[6] = { false ,false , false, false, true, false };
 
 ALLEGRO_DISPLAY* display = NULL;
 ALLEGRO_EVENT_QUEUE* fila_eventos = NULL;
 ALLEGRO_TIMER* timer = NULL;
-ALLEGRO_BITMAP* Elisabeth_png = NULL;
+ALLEGRO_BITMAP* Elisabeth_png = NULL; 
 ALLEGRO_BITMAP* fundo_png = NULL;
-ALLEGRO_BITMAP* inimigos_png[2] = { NULL, NULL };
+ALLEGRO_BITMAP* inimigos_png[3] = { NULL, NULL };
+
 int main()
 {
-	bool redraw = true;
-	bool done = false;
-	bool parado = true;
-	int i;
-	int col_max, lin_atual_2;
+	bool redesenhar = true; // Variavel de controle para redesenhar algo
+	bool done = false;  // Variavel de controle para o laço principal
+	bool parado = true; // Variavel para saber se esta parado ou nao
+	int level;
+	int indice, indice2, indice3;  // Indices para acessar os vetores de inimigos
+	int acao; // Utilizado para saber qual a ação necessaria do personagem
 
-	struct Sprite elisabeth; // Sprite da elisabeth
-	struct Sprite inimigo[2]; // Sprite dos inimigos no geral
-	struct Personagem principal;  // Personagem Principal
-	struct Personagem secundario[2]; // Personagem secundario
+	//struct Sprite elisabeth; // Sprite da elisabeth
+	//struct Sprite inimigo[3]; // Sprite dos inimigos no geral
+	struct Personagem elisabeth;  // Personagem elisabeth
+	struct Personagem inimigos[3]; // Personagem secundario
 
-	init_elisabeth(&elisabeth, &principal); //Inicialização da elisabeth
-	
-	for (i = 0; i < num_inimigos; i++)
+	init_elisabeth(&elisabeth);	//Inicialização da Elisabeth
+	init_dwarf(inimigos); // Inicialização do Dwarf
+	init_minotauro(inimigos); // Inicialização do Minotauro
+	init_esqueleto(inimigos); // Inicialização do Esqueleto
+	/*for (indice = 0; indice < num_inimigos; indice++)
 	{
-		init_inimigos(inimigo, secundario, i); // Inicializando inimigo no mapa
-	}
+		init_inimigos(inimigo, inimigos, indice); // Inicializando inimigo no mapa
+	}*/
 
 	if (inicializar() != 1)
 	{
@@ -41,61 +46,64 @@ int main()
 	{
 		ALLEGRO_EVENT evento;
 		al_wait_for_event(fila_eventos, &evento);
-		
+
 		int pos_y_anterior = 0;
 
 		if (evento.type == ALLEGRO_EVENT_TIMER)
 		{
-			redraw = true;
-			
-			
-			int zero;
-			for (zero = 0; zero < num_inimigos; zero++)
+			redesenhar = true;
+
+			for (indice2 = 0; indice2 < num_inimigos; indice2++)
 			{
-				switch (zero)
+				switch (indice2)
 				{
 				case 0:
-					 col_max = 5, lin_atual_2 = 0;
-					animacao2(inimigo, secundario, col_max, lin_atual_2, zero);
+					animacao_inimigos(inimigos, 0, indice2);
 					break;
 				case 1:
-					 col_max = 8, lin_atual_2 = 3;
-					animacao2(inimigo, secundario, col_max, lin_atual_2, zero);
+					animacao_inimigos(inimigos, 1, indice2);
+					break;
+				case 2:
+					animacao_inimigos(inimigos, 2, indice2);
 					break;
 				}
 			}
 			if (parado) // Parado realiza animação padrão
 			{
-				 col_max = 5, lin_atual_2 = 0;
-				animacao(&elisabeth, &principal, col_max, lin_atual_2);
+				acao = 0;
+				animacao_elisabeth1(&elisabeth, acao);
 			}
 
 			if (keys[ESQUERDA]) // Vai para a esquerda
 			{
-				 col_max = 7, lin_atual_2 = 1;
-				
-				keys[DIRECAO]= false;
-				animacao(&elisabeth, &principal, col_max, lin_atual_2);
-				principal.pos_x_sprite -= principal.vel_x_sprite;
-			}			
+				acao = 1;
+				parado = false;
+				keys[DIRECAO] = false;
+
+				animacao_elisabeth1(&elisabeth, acao);
+				elisabeth.pos_x_sprite -= elisabeth.vel_x_sprite;
+
+			}
 			if (keys[DIREITA]) // Vai para a direita
 			{
-				 col_max = 7, lin_atual_2 = 1;
-				
+				acao = 1;
+				parado = false;
 				keys[DIRECAO] = true;
-				animacao(&elisabeth, &principal, col_max, lin_atual_2);
-				principal.pos_x_sprite += principal.vel_x_sprite;
+
+				animacao_elisabeth1(&elisabeth, acao);
+				elisabeth.pos_x_sprite += elisabeth.vel_x_sprite;
+
 			}
-				
+
 			if (keys[ESPACO]) // Comando para bater
 			{
-				 col_max = 9, lin_atual_2 = 5;
-				
-				animacao(&elisabeth, &principal, col_max, lin_atual_2);
+				acao = 2;
+				parado = false;
+				animacao_elisabeth1(&elisabeth, acao);
 			}
 		}
 
-		else if (evento.type == ALLEGRO_EVENT_KEY_DOWN)
+		else if (evento.type == ALLEGRO_EVENT_KEY_DOWN) // Se a tecla for pressionada
 		{
 			switch (evento.keyboard.keycode)
 			{
@@ -104,11 +112,11 @@ int main()
 				break;
 			case ALLEGRO_KEY_UP:
 				// Precisa consertar ainda
-				int col_max = 7, lin_atual_2 = 1;
+				acao = 1;
 				parado = false;
-				animacao(&elisabeth, &principal, col_max, lin_atual_2);
-				pos_y_anterior = principal.pos_y_sprite;
-				principal.pos_y_sprite -= principal.vel_y_sprite;
+				animacao_elisabeth1(&elisabeth, acao);
+				pos_y_anterior = elisabeth.pos_y_sprite;
+				elisabeth.pos_y_sprite -= elisabeth.vel_y_sprite;
 				keys[GRAVIDADE] = true;
 				break;
 			case ALLEGRO_KEY_LEFT:
@@ -122,7 +130,7 @@ int main()
 				break;
 			}
 		}
-		else if (evento.type == ALLEGRO_EVENT_KEY_UP)
+		else if (evento.type == ALLEGRO_EVENT_KEY_UP) // Se a tecla for solta
 		{
 			switch (evento.keyboard.keycode)
 			{
@@ -134,22 +142,24 @@ int main()
 				break;
 			case ALLEGRO_KEY_LEFT:
 				keys[ESQUERDA] = false;
+				parado = true;
 				break;
 			case ALLEGRO_KEY_RIGHT:
 				keys[DIREITA] = false;
+				parado = true;
 				break;
 			case ALLEGRO_KEY_SPACE:
 				keys[ESPACO] = false;
 				break;
 			}
 		}
-		else if (evento.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
+		else if (evento.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) // Se houver um clique do mouse
 		{
 			if (evento.mouse.x <= width && evento.mouse.x >= 0 &&
 				evento.mouse.y <= height && evento.mouse.y >= 0)
 				printf("click");
 		}
-		else if (evento.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP)
+		else if (evento.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP) // Se desfizer o clique
 		{
 			if (evento.mouse.x <= width && evento.mouse.x >= 0 &&
 				evento.mouse.y <= height && evento.mouse.y >= 0)
@@ -160,38 +170,48 @@ int main()
 		{
 			done = true;
 		}
-			
-		if (redraw && al_is_event_queue_empty(fila_eventos)) 
+
+		if (redesenhar && al_is_event_queue_empty(fila_eventos))
 		{
-			redraw = false;
-			int indice;
+			redesenhar = false;
 			int pos_x, pos_y;
 
 			// Desenhando o fundo
-			al_draw_scaled_bitmap(fundo_png, 0, 0, 1024, 383, 0, 0,width,height, 0);
+			al_draw_scaled_bitmap(fundo_png, 0, 0, 1024, 383, 0, 0, width, height, 0);
 
-			
+
 			/* Infelizmente al_draw_scaled_bitmap nao funciona dentro de outra função void
 			   Entao tive que fazer o desenho dos inimigos diretamente na main */
-			for (indice = 0; indice < num_inimigos; indice++)
+			for (indice3 = 0; indice3 < num_inimigos; indice3++)
 			{
-				switch (indice)
+				switch (indice3)
 				{
 				case 0: // Inimigo 1
-					pos_x = 30, pos_y = height/2;
-					al_draw_scaled_bitmap(inimigos_png[indice],
-						inimigo[indice].regiao_x_folha, inimigo[indice].regiao_y_folha,
-						secundario[indice].largura_sprite, secundario[indice].altura_sprite,
-						pos_x + secundario[indice].largura_sprite, pos_y,
-					secundario[indice].largura_sprite + 80, secundario[indice].altura_sprite + 80, 0);
+					pos_x = 30, pos_y = height / 2;
+					acao = 0;
+					al_draw_scaled_bitmap(inimigos_png[indice3],
+						inimigos[indice3].x_folha, inimigos[indice3].y_folha,
+						inimigos[indice3].largura_sprite, inimigos[indice3].altura_sprite,
+						pos_x + inimigos[indice3].largura_sprite, pos_y,
+						inimigos[indice3].largura_sprite + 80, inimigos[indice3].altura_sprite + 80, 0);
 					break;
 				case 1: // Inimigo 2
 					pos_x = 60, pos_y = 60;
-					al_draw_scaled_bitmap(inimigos_png[indice],
-						inimigo[indice].regiao_x_folha, inimigo[indice].regiao_y_folha,
-						secundario[indice].largura_sprite, secundario[indice].altura_sprite,
-						pos_x + secundario[indice].largura_sprite, pos_y,
-						secundario[indice].largura_sprite + 80, secundario[indice].altura_sprite + 80, 0);
+					acao = 1;
+					al_draw_scaled_bitmap(inimigos_png[indice3],
+						inimigos[indice3].x_folha, inimigos[indice3].y_folha,
+						inimigos[indice3].largura_sprite, inimigos[indice3].altura_sprite,
+						pos_x + inimigos[indice3].largura_sprite, pos_y,
+						inimigos[indice3].largura_sprite + 80, inimigos[indice3].altura_sprite + 80, 0);
+					break;
+				case 2: // Inimigo 3
+					pos_x = 400, pos_y = 400;
+					acao = 2;
+					al_draw_scaled_bitmap(inimigos_png[indice3],
+						inimigos[indice3].x_folha, inimigos[indice3].y_folha,
+						inimigos[indice3].largura_sprite, inimigos[indice3].altura_sprite,
+						pos_x + inimigos[indice3].largura_sprite, pos_y,
+						inimigos[indice3].largura_sprite + 80, inimigos[indice3].altura_sprite + 80, 0);
 					break;
 				}
 			}
@@ -199,23 +219,25 @@ int main()
 			if (keys[DIRECAO])
 			{
 				// Boneco para um lado
+				acao = 1;
 				al_draw_scaled_bitmap(Elisabeth_png,
-					elisabeth.regiao_x_folha, elisabeth.regiao_y_folha,
-					principal.largura_sprite, principal.altura_sprite,
-					principal.pos_x_sprite + principal.largura_sprite, principal.pos_y_sprite,
-					principal.largura_sprite + 80, principal.altura_sprite + 80, 0);
+					elisabeth.x_folha, elisabeth.y_folha,
+					elisabeth.largura_sprite, elisabeth.altura_sprite,
+					elisabeth.pos_x_sprite + elisabeth.largura_sprite, elisabeth.pos_y_sprite,
+					elisabeth.largura_sprite + 80, elisabeth.altura_sprite + 80, 0);
 			}
 			else
 			{
+				acao = 1;
 				// Boneco ao contrario
 				al_draw_scaled_bitmap(Elisabeth_png,
-					elisabeth.regiao_x_folha, elisabeth.regiao_y_folha,
-					principal.largura_sprite, principal.altura_sprite,
-					principal.pos_x_sprite + principal.largura_sprite, principal.pos_y_sprite,
-					principal.largura_sprite + 80 , principal.altura_sprite + 80, ALLEGRO_FLIP_HORIZONTAL);
+					elisabeth.x_folha, elisabeth.y_folha,
+					elisabeth.largura_sprite, elisabeth.altura_sprite,
+					elisabeth.pos_x_sprite + elisabeth.largura_sprite, elisabeth.pos_y_sprite,
+					elisabeth.largura_sprite + 80, elisabeth.altura_sprite + 80, ALLEGRO_FLIP_HORIZONTAL);
 			}
 			al_flip_display();
-			redraw = 0;
+			redesenhar = 0;
 
 		}
 
@@ -228,6 +250,7 @@ int main()
 	al_destroy_bitmap(Elisabeth_png);
 	al_destroy_bitmap(inimigos_png[0]);
 	al_destroy_bitmap(inimigos_png[1]);
+	al_destroy_bitmap(inimigos_png[2]);
 	al_destroy_event_queue(fila_eventos);
 
 	return 0;
@@ -289,16 +312,23 @@ int inicializar()
 		return -1;
 	}
 
-	inimigos_png[0] = al_load_bitmap("sprites/Inimigos/Dwarf.png"); // Carregando ciclope
-	inimigos_png[1] = al_load_bitmap("sprites/Inimigos/Minotauro.png"); // Carregando minotauro
+	inimigos_png[0] = al_load_bitmap("sprites/Inimigos/Dwarf.png"); // Carregando Dwarf
+	inimigos_png[1] = al_load_bitmap("sprites/Inimigos/Minotauro.png"); // Carregando Minotauro
+	inimigos_png[2] = al_load_bitmap("sprites/Inimigos/Esqueleto.png"); // Carregando Esqueleto
 
 	if (!inimigos_png[0])
 	{
 		error_msg("Falha ao carregar um ou mais inimigos");
 		return -1;
 	}
-	
+
 	if (!inimigos_png[1])
+	{
+		error_msg("Falha ao carregar um ou mais inimigos");
+		return -1;
+	}
+
+	if (!inimigos_png[2])
 	{
 		error_msg("Falha ao carregar um ou mais inimigos");
 		return -1;
@@ -319,6 +349,3 @@ int inicializar()
 
 	return 1;
 }
-
-
-
