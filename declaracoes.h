@@ -10,7 +10,6 @@
 #define width 1000
 #define height 750
 
-
 struct Acao
 {
 	bool esqueleto;
@@ -36,14 +35,22 @@ struct Personagem
 	int y_folha;
 };
 
+struct Cenario
+{
+    int MapaColuna;
+	int MapaTam;
+	int BlocoTam;
+};
+
 // Mensagem de erro
 void error_msg(char *mensagem);
-// InicializaÁ„o do Programa
+// Inicializa√ß√£o do Programa
 int inicializar();
-// FunÁ„o respons·vel por animar
+// Fun√ß√£o respons√°vel por animar
 void animacao_elisabeth1(struct Personagem* beth_jack, int acao);
 void animacao_inimigos(struct Personagem inimigos[], int acao, int indice);
-// InicializaÁ„o do Personagem Principal
+// Inicializa√ß√£o do Personagem Principal
+
 void init_elisabeth(struct Personagem* elisabeth);
 // Inicializando inimigos
 void init_dwarf(struct Personagem dwarf[]);
@@ -51,3 +58,6 @@ void init_minotauro(struct Personagem minotauro[]);
 void init_esqueleto(struct Personagem esqueleto[]);
 // Tirando os inimigos do mapa
 void morte_inimigo(struct Sprite monstro[], struct Personagem secundario[], int indice);
+//Inicializa mapas
+void InitCenario(struct Cenario* mapa);
+
