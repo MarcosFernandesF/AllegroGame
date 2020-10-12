@@ -4,10 +4,12 @@ void init_elisabeth(struct Personagem* elisabeth)
 {
 	elisabeth->altura_sprite = 32;
 	elisabeth->largura_sprite = 32;
-	elisabeth->pos_x_sprite = 200;
-	elisabeth->pos_y_sprite = height/2;
+	elisabeth->pos_x_sprite = 0;
+	elisabeth->pos_y_sprite = 0;
+	elisabeth->inicio_x = 50;
+	elisabeth->inicio_y = height - 180;
 	elisabeth->vel_x_sprite = 5;
-	elisabeth->vel_y_sprite = 8;
+	elisabeth->vel_y_sprite = 15;
 	elisabeth->x_folha = 0;
 	elisabeth->y_folha = 0;
 
@@ -15,7 +17,6 @@ void init_elisabeth(struct Personagem* elisabeth)
 	elisabeth->animacao[0].col_atual = 0;
 	elisabeth->animacao[0].lin_atual = 0;
 	elisabeth->animacao[0].col_folha = 5;
-	elisabeth->animacao[0].lin_folha = 0;
 	elisabeth->animacao[0].frames_min = 0;
 	elisabeth->animacao[0].frames_max = 9;
 
@@ -45,13 +46,36 @@ void init_elisabeth(struct Personagem* elisabeth)
 
 }
 
+void init_jack(struct Personagem* jack)
+{
+	jack->altura_sprite = 32;
+	jack->largura_sprite = 32;
+	jack->x_folha = 0;
+	jack->y_folha = 0;
+
+	// IDLE
+	jack->animacao[0].col_atual = 0;
+	jack->animacao[0].lin_atual = 0;
+	jack->animacao[0].col_folha = 12;
+	jack->animacao[0].lin_folha = 0;
+	jack->animacao[0].frames_min = 0;
+	jack->animacao[0].frames_max = 9;
+
+	// Caido
+	jack->animacao[1].col_atual_old = 5;
+	jack->animacao[1].col_atual = 5;
+	jack->animacao[1].lin_atual = 7;
+	jack->animacao[1].col_folha = 6;
+	jack->animacao[1].lin_folha = 0;
+	jack->animacao[1].frames_min = 0;
+	jack->animacao[1].frames_max = 9;
+}
+
 
 void init_dwarf(struct Personagem dwarf[])
 {
 	dwarf[0].altura_sprite = 32;
 	dwarf[0].largura_sprite = 38;
-	dwarf[0].pos_x_sprite = 500;
-	dwarf[0].pos_y_sprite = 200;
 	dwarf[0].vel_x_sprite = 5;
 	dwarf[0].vel_y_sprite = 8;
 	dwarf[0].x_folha = 0;
@@ -98,8 +122,6 @@ void init_minotauro(struct Personagem minotauro[])
 {
 	minotauro[1].altura_sprite = 96;
 	minotauro[1].largura_sprite = 96;
-	minotauro[1].pos_x_sprite = 800;
-	minotauro[1].pos_y_sprite = 400;
 	minotauro[1].vel_x_sprite = 5;
 	minotauro[1].vel_y_sprite = 8;
 
@@ -144,8 +166,6 @@ void init_esqueleto(struct Personagem esqueleto[])
 {
 	esqueleto[2].altura_sprite = 150;
 	esqueleto[2].largura_sprite = 150;
-	esqueleto[2].pos_x_sprite = 350;
-	esqueleto[2].pos_y_sprite = 100;
 	esqueleto[2].vel_x_sprite = 5;
 	esqueleto[2].vel_y_sprite = 8;
 	esqueleto[2].x_folha = 0;
