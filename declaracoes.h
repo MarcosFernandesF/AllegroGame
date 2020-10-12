@@ -25,10 +25,15 @@ struct Acao
 struct Personagem
 {
 	struct Acao animacao[5];
+	int vivo;
 	int altura_sprite;
 	int largura_sprite;
 	int pos_x_sprite;
 	int pos_y_sprite;
+	int inicio_x;
+	int inicio_y;
+	int pos_x_sprite_2;
+	int pos_y_sprite_2;
 	int vel_x_sprite;
 	int vel_y_sprite;
 	int x_folha;
@@ -47,17 +52,21 @@ void error_msg(char *mensagem);
 // Inicialização do Programa
 int inicializar();
 // Função responsável por animar
-void animacao_elisabeth1(struct Personagem* beth_jack, int acao);
+void animacao_beth_jack(struct Personagem* beth_jack, int acao, bool jack);
 void animacao_inimigos(struct Personagem inimigos[], int acao, int indice);
 // Inicialização do Personagem Principal
-
 void init_elisabeth(struct Personagem* elisabeth);
-// Inicializando inimigos
+void init_jack(struct Personagem* jack);
+// Inicializando dos inimigos
 void init_dwarf(struct Personagem dwarf[]);
 void init_minotauro(struct Personagem minotauro[]);
 void init_esqueleto(struct Personagem esqueleto[]);
 // Tirando os inimigos do mapa
 void morte_inimigo(struct Sprite monstro[], struct Personagem secundario[], int indice);
-//Inicializa mapas
+// Inicializa mapas
 void InitCenario(struct Cenario* mapa);
+// Desenha os inimigos em posições do mapa e o jack tambem
+void desenha_inimigos(ALLEGRO_BITMAP* monstro_png [], ALLEGRO_BITMAP* jack_png, struct Personagem inimigos[], struct Personagem* jack, int level);
+// Desenha Elisabeth
+void desenha_elisabeth(ALLEGRO_BITMAP* elisabeth_png, struct Personagem* elisabeth, bool keys[], int DIRECAO);
 

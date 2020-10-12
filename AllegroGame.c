@@ -10,10 +10,11 @@ ALLEGRO_DISPLAY* display = NULL;
 ALLEGRO_EVENT_QUEUE* fila_eventos = NULL;
 ALLEGRO_TIMER* timer = NULL;
 
-ALLEGRO_BITMAP* Elisabeth_png = NULL; 
+ALLEGRO_BITMAP* elisabeth_png = NULL; 
+ALLEGRO_BITMAP* jack_png = NULL;
 ALLEGRO_BITMAP* fundo_png = NULL;
+ALLEGRO_BITMAP* folha_bloco = NULL;
 ALLEGRO_BITMAP* inimigos_png[3] = { NULL, NULL };
-
 
 int mapa1[] = {5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
                      5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
@@ -31,21 +32,21 @@ int mapa1[] = {5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
                      5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 1, 1, 1,
                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-int mapa2[] = {5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-                     5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-                     5, 5, 5, 5, 5, 5, 2, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-                     5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 3, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 3, 3, 3, 4, 5, 5, 5,
-                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-                     5, 5, 5, 5, 5, 5, 5, 5, 2, 3, 3, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-                     5, 5, 5, 5, 2, 3, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+int mapa2[] = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+					 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+					 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+					 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+					 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 4, 5, 5, 5, 5, 5, 5,
+					 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 3, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+					 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+					 5, 5, 5, 2, 3, 3, 3, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+					 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+					 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 3, 3, 4, 5, 5, 5, 5, 5, 5, 5, 5,
+					 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+					 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 3, 4, 5, 5, 5, 5,
+					 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+					 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+					 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 int mapa3[] = {5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
                      5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
@@ -66,22 +67,24 @@ int mapa3[] = {5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
 
 int main()
 {
-  bool redesenhar = true; // Variavel de controle para redesenhar algo
+	bool redesenhar = true; // Variavel de controle para redesenhar algo
 	bool done = false;
-  bool parado = true; // Variavel para saber se esta parado ou nao
+	bool parado = true; // Variavel para saber se esta parado ou nao
 	int level=1;
-	int indice, indice2, indice3;  // Indices para acessar os vetores de inimigos
+	int indice2;  // Indices utilizados em todo o codigo
 	int acao; // Utilizado para saber qual a a��o necessaria do personagem
 
-	struct Personagem elisabeth;  // Personagem elisabeth
+	struct Personagem elisabeth;  // Personagem Elisabeth
+	struct Personagem jack; // Personagem Jack
 	struct Personagem inimigos[3]; // Personagem secundario
-  struct Cenario mapa; // Mapa
+    struct Cenario mapa; // Mapa
 
-	init_elisabeth(&elisabeth);	//Inicializa��o da Elisabeth
-	init_dwarf(inimigos); // Inicializa��o do Dwarf
-	init_minotauro(inimigos); // Inicializa��o do Minotauro
-	init_esqueleto(inimigos); // Inicializa��o do Esqueleto
-  InitCenario(&mapa); // Inicializando mapa
+	init_elisabeth(&elisabeth);	//Inicialização da Elisabeth
+	init_jack(&jack);
+	init_dwarf(inimigos); // Inicialização do Dwarf
+	init_minotauro(inimigos); // Inicialização do Minotauro
+	init_esqueleto(inimigos); // Inicialização do Esqueleto
+    InitCenario(&mapa); // Inicializando mapa
 
 	if (inicializar() != 1)
 	{
@@ -89,16 +92,34 @@ int main()
 		return -1;
 	}
 
+	
 	while (!done)
 	{
 		ALLEGRO_EVENT evento;
 		al_wait_for_event(fila_eventos, &evento);
-		parado = true;
 		int pos_y_anterior = 0;
+		
+		switch (level)
+		{
+		case 2:
+			// preciso mudar
+			elisabeth.inicio_x = 100;
+			elisabeth.inicio_y = height - 180;
+			break;
+		case 3:
+			// preciso mudar
+			elisabeth.inicio_x = -1810;
+			elisabeth.inicio_y = height - 180;
+			break;
+		}
+
 
 		if (evento.type == ALLEGRO_EVENT_TIMER)
 		{
 			redesenhar = true;
+
+			
+			animacao_beth_jack (&jack, 1, true);
 
 			for (indice2 = 0; indice2 < num_inimigos; indice2++)
 			{
@@ -108,17 +129,17 @@ int main()
 					animacao_inimigos(inimigos, 0, indice2);
 					break;
 				case 1:
-					animacao_inimigos(inimigos, 1, indice2);
+					animacao_inimigos(inimigos, 0, indice2);
 					break;
 				case 2:
-					animacao_inimigos(inimigos, 2, indice2);
+					animacao_inimigos(inimigos, 0, indice2);
 					break;
 				}
 			}
 			if (parado) // Parado realiza animação padrão
 			{
 				acao = 0;
-				animacao_elisabeth1(&elisabeth, acao);
+				animacao_beth_jack(&elisabeth, acao, false);
 			}
 
 			if (keys[ESQUERDA]) // Vai para a esquerda
@@ -127,7 +148,7 @@ int main()
 				parado = false;
 				keys[DIRECAO] = false;
 
-				animacao_elisabeth1(&elisabeth, acao);
+				animacao_beth_jack(&elisabeth, acao, false);
 				elisabeth.pos_x_sprite -= elisabeth.vel_x_sprite;
 
 			}
@@ -137,7 +158,7 @@ int main()
 				parado = false;
 				keys[DIRECAO] = true;
 
-				animacao_elisabeth1(&elisabeth, acao);
+				animacao_beth_jack(&elisabeth, acao, false);
 				elisabeth.pos_x_sprite += elisabeth.vel_x_sprite;
 
 			}
@@ -146,7 +167,7 @@ int main()
 			{
 				acao = 2;
 				parado = false;
-				animacao_elisabeth1(&elisabeth, acao);
+				animacao_beth_jack(&elisabeth, acao, false);
 			}
 		}
 
@@ -161,7 +182,7 @@ int main()
 				// Precisa consertar ainda
 				acao = 1;
 				parado = false;
-				animacao_elisabeth1(&elisabeth, acao);
+				animacao_beth_jack(&elisabeth, acao, false);
 				pos_y_anterior = elisabeth.pos_y_sprite;
 				elisabeth.pos_y_sprite -= elisabeth.vel_y_sprite;
 				keys[GRAVIDADE] = true;
@@ -221,9 +242,8 @@ int main()
 		if (redesenhar && al_is_event_queue_empty(fila_eventos))
 		{
 			redesenhar = false;
-			int pos_x, pos_y;
 
-			al_draw_scaled_bitmap(fundo, 0, 0, 576, 324, 0, 0,width,height, 0);
+			al_draw_scaled_bitmap(fundo_png, 0, 0, 576, 324, 0, 0,width,height, 0);
 
 			switch(level){
         case 1:
@@ -233,8 +253,15 @@ int main()
                 ((mapa.BlocoTam)+((mapa.BlocoTam)/2)) * (i%(mapa.MapaColuna)), ((mapa.BlocoTam)+((mapa.BlocoTam)/2)) * (i/(mapa.MapaColuna)),
                  (mapa.BlocoTam)+((mapa.BlocoTam)/2), (mapa.BlocoTam)+((mapa.BlocoTam)/2), 0);
 			}
-			if(principal.pos_y_sprite<0 && principal.pos_x_sprite<0){
-              level++;}
+			// preciso mudar
+			if(elisabeth.pos_x_sprite + elisabeth.inicio_x > width + 50 &&
+				elisabeth.pos_y_sprite + elisabeth.inicio_y < 96)
+			{
+				// isso deu certo preciso colocar no resto
+				elisabeth.pos_x_sprite = 0;
+				elisabeth.pos_y_sprite = 0;
+              level++;
+			}
               break;
         case 2:
 			for (int j = 0; j<mapa.MapaTam; j++)
@@ -243,8 +270,12 @@ int main()
                 ((mapa.BlocoTam)+((mapa.BlocoTam)/2)) * (j%(mapa.MapaColuna)), ((mapa.BlocoTam)+((mapa.BlocoTam)/2)) * (j/(mapa.MapaColuna)),
                  (mapa.BlocoTam)+((mapa.BlocoTam)/2), (mapa.BlocoTam)+((mapa.BlocoTam)/2), 0);
 			}
-			if(principal.pos_y_sprite<0 && principal.pos_x_sprite>1000){
-              level++;}
+			// preciso mudar
+			if(elisabeth.pos_x_sprite + elisabeth.inicio_x > width + 850 &&
+				elisabeth.pos_y_sprite + elisabeth.inicio_y > height - 30)
+			{
+              level++;
+			}
 			break;
         case 3:
             for (int i = 0; i<mapa.MapaTam; i++)
@@ -256,62 +287,10 @@ int main()
               break;
         }
 
-			/* Infelizmente al_draw_scaled_bitmap nao funciona dentro de outra fun��o void
-			   Entao tive que fazer o desenho dos inimigos diretamente na main */
-			for (indice3 = 0; indice3 < num_inimigos; indice3++)
-			{
-				switch (indice3)
-				{
-				case 0: // Inimigo 1
-					pos_x = 30, pos_y = height / 2;
-					acao = 0;
-					al_draw_scaled_bitmap(inimigos_png[indice3],
-						inimigos[indice3].x_folha, inimigos[indice3].y_folha,
-						inimigos[indice3].largura_sprite, inimigos[indice3].altura_sprite,
-						pos_x + inimigos[indice3].largura_sprite, pos_y,
-						inimigos[indice3].largura_sprite + 80, inimigos[indice3].altura_sprite + 80, 0);
-					break;
-				case 1: // Inimigo 2
-					pos_x = 60, pos_y = 60;
-					acao = 1;
-					al_draw_scaled_bitmap(inimigos_png[indice3],
-						inimigos[indice3].x_folha, inimigos[indice3].y_folha,
-						inimigos[indice3].largura_sprite, inimigos[indice3].altura_sprite,
-						pos_x + inimigos[indice3].largura_sprite, pos_y,
-						inimigos[indice3].largura_sprite + 80, inimigos[indice3].altura_sprite + 80, 0);
-					break;
-				case 2: // Inimigo 3
-					pos_x = 400, pos_y = 400;
-					acao = 2;
-					al_draw_scaled_bitmap(inimigos_png[indice3],
-						inimigos[indice3].x_folha, inimigos[indice3].y_folha,
-						inimigos[indice3].largura_sprite, inimigos[indice3].altura_sprite,
-						pos_x + inimigos[indice3].largura_sprite, pos_y,
-						inimigos[indice3].largura_sprite + 80, inimigos[indice3].altura_sprite + 80, 0);
-					break;
-				}
-			}
+			desenha_inimigos(inimigos_png, jack_png, inimigos, &jack, level);
 
-			if (keys[DIRECAO])
-			{
-				// Boneco para um lado
-				acao = 1;
-				al_draw_scaled_bitmap(Elisabeth_png,
-					elisabeth.x_folha, elisabeth.y_folha,
-					elisabeth.largura_sprite, elisabeth.altura_sprite,
-					elisabeth.pos_x_sprite + elisabeth.largura_sprite, elisabeth.pos_y_sprite,
-					elisabeth.largura_sprite + 80, elisabeth.altura_sprite + 80, 0);
-			}
-			else
-			{
-				acao = 1;
-				// Boneco ao contrario
-				al_draw_scaled_bitmap(Elisabeth_png,
-					elisabeth.x_folha, elisabeth.y_folha,
-					elisabeth.largura_sprite, elisabeth.altura_sprite,
-					elisabeth.pos_x_sprite + elisabeth.largura_sprite, elisabeth.pos_y_sprite,
-					elisabeth.largura_sprite + 80, elisabeth.altura_sprite + 80, ALLEGRO_FLIP_HORIZONTAL);
-			}
+			desenha_elisabeth(elisabeth_png, &elisabeth, keys, DIRECAO);
+
 			al_flip_display();
 			redesenhar = 0;
 
@@ -321,7 +300,8 @@ int main()
 	al_destroy_display(display);
 	al_destroy_timer(timer);
 
-	al_destroy_bitmap(Elisabeth_png);
+	al_destroy_bitmap(elisabeth_png);
+	al_destroy_bitmap(jack_png);
 	al_destroy_bitmap(inimigos_png[0]);
 	al_destroy_bitmap(inimigos_png[1]);
 	al_destroy_bitmap(inimigos_png[2]);
@@ -380,10 +360,17 @@ int inicializar()
 		return -1;
 	}
 
-	Elisabeth_png = al_load_bitmap("sprites/Principais/Elisabeth.png"); // Carregando a folha de sprites
-	if (!Elisabeth_png)
+	elisabeth_png = al_load_bitmap("sprites/Principais/Elisabeth.png"); // Carregando a folha de sprites
+	if (!elisabeth_png)
 	{
-		error_msg("Falha ao carregar a folha de sprites");
+		error_msg("Falha ao carregar a Elisabeth.png");
+		return -1;
+	}
+
+	jack_png = al_load_bitmap("sprites/Principais/Jack.png"); // Carregando a folha de sprites
+	if (!jack_png)
+	{
+		error_msg("Falha ao carregar Jack.png");
 		return -1;
 	}
 
@@ -394,7 +381,7 @@ int inicializar()
 
 	if (!inimigos_png[0])
 	{
-		error_msg("Falha ao carregar um ou mais inimigos");
+		error_msg("Falha ao carregar um ou mais inimigos.png");
 		return -1;
 	}
 
@@ -418,7 +405,7 @@ int inicializar()
 	}
 
 	fundo_png = al_load_bitmap("sprites/background1.png"); //Carregando o background do jogo
-	if (!fundo)
+	if (!fundo_png)
 	{
 		error_msg("Falha ao carregar o fundo do jogo");
 		return -1;
