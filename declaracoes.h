@@ -12,37 +12,41 @@
 
 struct Acao
 {
-	bool esqueleto;
-	int col_atual;
-	int col_atual_old;
-	int lin_atual;
-	int col_folha;
-	int lin_folha;
-	int frames_min;
-	int frames_max;
+	bool esqueleto; // Controle para saber se a animacao e do Esqueleto (animação diferente das demais)
+	int col_atual; // Coluna atual da folha de sprite
+	int col_atual_old; // Coluna atual antiga utilizado para animação do Esqueleto
+	int lin_atual; // Linha atual da folha de sprite
+	int col_folha; // Colunas totais da folha de sprite
+	int lin_folha; // Linhas totais da folha de sprite
+	int frames_min; // Frame minimo da animação 
+	int frames_max; // Frame maximo da animação
 };
 
 struct Personagem
 {
 	struct Acao animacao[5];
-	int vivo;
-	int altura_sprite;
-	int largura_sprite;
-	int pos_x_sprite;
-	int pos_y_sprite;
-	int inicio_x;
-	int inicio_y;
-	int pos_x_sprite_2;
-	int pos_y_sprite_2;
-	int vel_x_sprite;
-	int vel_y_sprite;
-	int x_folha;
-	int y_folha;
+	int vivo; // Vivo ou morto
+	int vidas_1; // Vidas
+	int vidas_2; // Vida do segundo inimigo
+	int altura_sprite; // Na folha
+	int largura_sprite;  // Na folha
+	int altura_sprite_tela; // Na tela
+	int largura_sprite_tela; // Na tela
+	int pos_x_sprite; // Posição X para incremento da movimentação
+	int pos_y_sprite; // Posição Y para incremento da movimentação
+	int inicio_x; // Inicio da posiçao X
+	int inicio_y; // Inicio da posiçao Y
+	int pos_x_sprite_2; // Posição X para movimentar segundo inimigo
+	int pos_y_sprite_2; // Posição Y para movimentar segundo inimigo
+	int vel_x_sprite; // Velocidade eixo X
+	int vel_y_sprite; // Velocidade eixo Y
+	int x_folha; // X da folha de sprite
+	int y_folha; // Y da folha de sprite
 };
 
 struct Cenario
 {
-    int MapaColuna;
+    int MapaColuna; 
 	int MapaTam;
 	int BlocoTam;
 };
@@ -69,4 +73,5 @@ void InitCenario(struct Cenario* mapa);
 void desenha_inimigos(ALLEGRO_BITMAP* monstro_png [], ALLEGRO_BITMAP* jack_png, struct Personagem inimigos[], struct Personagem* jack, int level);
 // Desenha Elisabeth
 void desenha_elisabeth(ALLEGRO_BITMAP* elisabeth_png, struct Personagem* elisabeth, bool keys[], int DIRECAO);
-
+// Colisao de personagens
+void colisao_personagens(struct Personagem* elisabeth, struct Personagem inimigos[], int indice);

@@ -2,14 +2,18 @@
 
 void init_elisabeth(struct Personagem* elisabeth)
 {
+	elisabeth->vivo = 1;
+	elisabeth->vidas_1 = 3;
 	elisabeth->altura_sprite = 32;
 	elisabeth->largura_sprite = 32;
+	elisabeth->altura_sprite_tela = 112;
+	elisabeth->largura_sprite_tela = 112;
 	elisabeth->pos_x_sprite = 0;
 	elisabeth->pos_y_sprite = 0;
 	elisabeth->inicio_x = 50;
 	elisabeth->inicio_y = height - 180;
 	elisabeth->vel_x_sprite = 5;
-	elisabeth->vel_y_sprite = 15;
+	elisabeth->vel_y_sprite = 30;
 	elisabeth->x_folha = 0;
 	elisabeth->y_folha = 0;
 
@@ -74,8 +78,12 @@ void init_jack(struct Personagem* jack)
 
 void init_dwarf(struct Personagem dwarf[])
 {
+	dwarf[0].vivo = 1;
+	dwarf[0].vidas_1 = 1;
 	dwarf[0].altura_sprite = 32;
 	dwarf[0].largura_sprite = 38;
+	dwarf[0].altura_sprite_tela = 112;
+	dwarf[0].largura_sprite_tela = 112;
 	dwarf[0].vel_x_sprite = 5;
 	dwarf[0].vel_y_sprite = 8;
 	dwarf[0].x_folha = 0;
@@ -120,8 +128,12 @@ void init_dwarf(struct Personagem dwarf[])
 }
 void init_minotauro(struct Personagem minotauro[])
 {
+	minotauro[1].vivo = 1;
+	minotauro[1].vidas_1 = 1;
 	minotauro[1].altura_sprite = 96;
 	minotauro[1].largura_sprite = 96;
+	minotauro[1].altura_sprite_tela = 396;
+	minotauro[1].largura_sprite_tela = 396;
 	minotauro[1].vel_x_sprite = 5;
 	minotauro[1].vel_y_sprite = 8;
 
@@ -164,8 +176,12 @@ void init_minotauro(struct Personagem minotauro[])
 
 void init_esqueleto(struct Personagem esqueleto[])
 {
+	esqueleto[2].vivo = 1;
+	esqueleto[2].vidas_1 = 1;
 	esqueleto[2].altura_sprite = 150;
 	esqueleto[2].largura_sprite = 150;
+	esqueleto[2].altura_sprite_tela = 230;
+	esqueleto[2].largura_sprite_tela = 230;
 	esqueleto[2].vel_x_sprite = 5;
 	esqueleto[2].vel_y_sprite = 8;
 	esqueleto[2].x_folha = 0;

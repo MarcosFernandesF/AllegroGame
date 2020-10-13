@@ -71,7 +71,7 @@ int main()
 	bool done = false;
 	bool parado = true; // Variavel para saber se esta parado ou nao
 	int level=1;
-	int indice2;  // Indices utilizados em todo o codigo
+	int indice2,indice;  // Indices utilizados em todo o codigo
 	int acao; // Utilizado para saber qual a a��o necessaria do personagem
 
 	struct Personagem elisabeth;  // Personagem Elisabeth
@@ -103,13 +103,13 @@ int main()
 		{
 		case 2:
 			// preciso mudar
-			elisabeth.inicio_x = 100;
-			elisabeth.inicio_y = height - 180;
+			elisabeth.inicio_x = -100;
+			elisabeth.inicio_y = -10;
 			break;
 		case 3:
 			// preciso mudar
-			elisabeth.inicio_x = -1810;
-			elisabeth.inicio_y = height - 180;
+			elisabeth.inicio_x = -50;
+			elisabeth.inicio_y = 0 - 180;
 			break;
 		}
 
@@ -118,23 +118,29 @@ int main()
 		{
 			redesenhar = true;
 
-			
-			animacao_beth_jack (&jack, 1, true);
+			animacao_beth_jack (&jack, 1, true); // Animação do Jack na fase 3
 
-			for (indice2 = 0; indice2 < num_inimigos; indice2++)
+			 for (indice2 = 0; indice2 < num_inimigos; indice2++)
 			{
 				switch (indice2)
 				{
 				case 0:
-					animacao_inimigos(inimigos, 0, indice2);
+
+					animacao_inimigos(inimigos, 2, indice2);
 					break;
 				case 1:
-					animacao_inimigos(inimigos, 0, indice2);
+					animacao_inimigos(inimigos, 2, indice2);
 					break;
 				case 2:
-					animacao_inimigos(inimigos, 0, indice2);
+					animacao_inimigos(inimigos, 2, indice2);
 					break;
 				}
+
+			for (indice = 0; indice < num_inimigos + 1; indice++)
+			{
+				colisao_personagens(&elisabeth, inimigos, indice);
+			}
+
 			}
 			if (parado) // Parado realiza animação padrão
 			{
@@ -165,6 +171,7 @@ int main()
 
 			if (keys[ESPACO]) // Comando para bater
 			{
+				printf("vidas: %d", elisabeth.vidas_1);
 				acao = 2;
 				parado = false;
 				animacao_beth_jack(&elisabeth, acao, false);
@@ -185,6 +192,7 @@ int main()
 				animacao_beth_jack(&elisabeth, acao, false);
 				pos_y_anterior = elisabeth.pos_y_sprite;
 				elisabeth.pos_y_sprite -= elisabeth.vel_y_sprite;
+				printf("%d", elisabeth.pos_y_sprite);
 				keys[GRAVIDADE] = true;
 				break;
 			case ALLEGRO_KEY_LEFT:
@@ -254,8 +262,8 @@ int main()
                  (mapa.BlocoTam)+((mapa.BlocoTam)/2), (mapa.BlocoTam)+((mapa.BlocoTam)/2), 0);
 			}
 			// preciso mudar
-			if(elisabeth.pos_x_sprite + elisabeth.inicio_x > width + 50 &&
-				elisabeth.pos_y_sprite + elisabeth.inicio_y < 96)
+			if(elisabeth.pos_x_sprite + elisabeth.inicio_x > width &&
+				elisabeth.pos_y_sprite + elisabeth.inicio_y < height - 680) 
 			{
 				// isso deu certo preciso colocar no resto
 				elisabeth.pos_x_sprite = 0;
@@ -274,6 +282,8 @@ int main()
 			if(elisabeth.pos_x_sprite + elisabeth.inicio_x > width + 850 &&
 				elisabeth.pos_y_sprite + elisabeth.inicio_y > height - 30)
 			{
+				elisabeth.pos_x_sprite = 0;
+				elisabeth.pos_y_sprite = 0;
               level++;
 			}
 			break;
@@ -287,9 +297,17 @@ int main()
               break;
         }
 
+
 			desenha_inimigos(inimigos_png, jack_png, inimigos, &jack, level);
 
 			desenha_elisabeth(elisabeth_png, &elisabeth, keys, DIRECAO);
+
+			al_draw_line(elisabeth.inicio_x + elisabeth.largura_sprite_tela + elisabeth.pos_x_sprite - 30,
+				elisabeth.inicio_y + elisabeth.altura_sprite_tela,
+			inimigos[0].pos_x_sprite + 30,
+				inimigos[0].pos_y_sprite + 30, al_map_rgb(255,255,255), 2);
+			
+			al_draw_rectangle((width / 2) - 100, height - 180, width / 2, height - 80, al_map_rgb(255, 255, 255), 2);
 
 			al_flip_display();
 			redesenhar = 0;
@@ -319,6 +337,9 @@ int inicializar()
 		error_msg("O Allegro nao foi inicializado");
 		return -1;
 	}
+
+	if (!al_init_primitives_addon())
+		return -1;
 
 	if (!al_init_image_addon())  // Inicializando a biblioteca de imagem
 	{
