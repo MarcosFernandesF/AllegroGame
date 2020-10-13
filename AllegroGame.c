@@ -2,15 +2,9 @@
 
 const int FPS = 60;
 const int num_inimigos = 3;
-enum keys {PULO, ESQUERDA, DIREITA, ESPACO, DIRECAO, GRAVIDADE};
+enum keys {PULO, ESQUERDA, DIREITA, ESPACO, DIRECAO};
 
-bool keys[6] = {false ,false , false, false, true, false };
-
-int vly = 0;
-int caindo=1;
-int grv = 1;
-int pulo = 0;
-int plimite = 0;
+bool keys[5] = {false ,false , false, false, true};
 
 ALLEGRO_DISPLAY* display = NULL;
 ALLEGRO_EVENT_QUEUE* fila_eventos = NULL;
@@ -24,15 +18,15 @@ ALLEGRO_BITMAP* inimigos_png[3] = { NULL, NULL };
 
 int mapa1[] = {5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
                      5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+                     5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
                      5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
                      3, 3, 3, 3, 3, 3, 3, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-                     5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 3, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                     5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
                      5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 3, 3, 3, 3, 3, 3, 3, 3,
+                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3,
                      1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
                      1, 1, 5, 5, 5, 5, 5, 5, 5, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-                     3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 5, 5, 5, 5, 1,
+                     3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 5, 5, 5, 1,
                      5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 1,
                      5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 1, 1,
                      5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 1, 1, 1,
@@ -69,8 +63,6 @@ int mapa3[] = {5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
                      5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
                      5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-
-
 int main()
 {
 	bool redesenhar = true; // Variavel de controle para redesenhar algo
@@ -79,6 +71,11 @@ int main()
 	int level=1;
 	int indice2,indice;  // Indices utilizados em todo o codigo
 	int acao; // Utilizado para saber qual a a��o necessaria do personagem
+    int vel_gravidade = 0; // Velocidade da gravidade
+    int caindo=1; // Variavel que controla se ta caindo
+    int gravidade = 1; // Gravidade
+    int pulo = 0; // Variavel de controle para o pulo
+    int pulo_limite = 0; // Posicao anterior ao pular
 
 	struct Personagem elisabeth;  // Personagem Elisabeth
 	struct Personagem jack; // Personagem Jack
@@ -86,18 +83,17 @@ int main()
     struct Cenario mapa; // Mapa
 
 	init_elisabeth(&elisabeth);	//Inicialização da Elisabeth
-	init_jack(&jack);
+	init_jack(&jack); // Inicialização do Jack
 	init_dwarf(inimigos); // Inicialização do Dwarf
 	init_minotauro(inimigos); // Inicialização do Minotauro
 	init_esqueleto(inimigos); // Inicialização do Esqueleto
-    InitCenario(&mapa); // Inicializando mapa
+    init_cenario(&mapa); // Inicializando mapa
 
 	if (inicializar() != 1)
 	{
 		error_msg("Falha ao inicializar o jogo");
 		return -1;
 	}
-
 
 	while (!done)
 	{
@@ -113,11 +109,10 @@ int main()
 			break;
 		case 3:
 			// preciso mudar
-			elisabeth.inicio_x = -50;
-			elisabeth.inicio_y = 0 - 180;
+			elisabeth.inicio_x = -100;
+			elisabeth.inicio_y = 675 - elisabeth.altura_sprite_tela;
 			break;
 		}
-
 
 		if (evento.type == ALLEGRO_EVENT_TIMER)
 		{
@@ -182,27 +177,24 @@ int main()
 				animacao_beth_jack(&elisabeth, acao, false);
 			}
 
-			if(pulo && elisabeth.pos_y_sprite > plimite - 10){
-                elisabeth.pos_y_sprite += vly;
-                vly = -elisabeth.vel_y_sprite;
+			//
+			if(pulo && elisabeth.pos_y_sprite > pulo_limite - 10){
+                elisabeth.pos_y_sprite += vel_gravidade;
+                vel_gravidade = -elisabeth.vel_y_sprite;
                 caindo = 1;
 			}
 			else if(caindo==1){
                 pulo = 0;
-                vly += grv;
-                elisabeth.pos_y_sprite += vly;
+                vel_gravidade += gravidade;
+                elisabeth.pos_y_sprite += vel_gravidade;
 			}
 			else {
                 pulo = 0;
-                vly = 0;
+                vel_gravidade = 0;
 			}
 			caindo=1;
 
-			if((elisabeth.inicio_y + elisabeth.pos_y_sprite + elisabeth.altura_sprite + 80 >= 675 && elisabeth.inicio_y + elisabeth.pos_y_sprite + elisabeth.altura_sprite + 80 >= 627) ||
-                (elisabeth.inicio_x >0 && elisabeth.inicio_x>width-192))
-            {
-                caindo=0;
-			}
+			caindo = colisao_blocos(&elisabeth, caindo, level);
 		}
 
 		else if (evento.type == ALLEGRO_EVENT_KEY_DOWN) // Se a tecla for pressionada
@@ -213,17 +205,11 @@ int main()
 				done = true;
 				break;
 			case ALLEGRO_KEY_UP:
-			    if(!pulo && !vly){
-			    plimite = elisabeth.pos_y_sprite;
+			    if(!pulo && !vel_gravidade)
+                {
+			    pulo_limite = elisabeth.pos_y_sprite;
 			    pulo = 1;
 			    }
-				/* Precisa consertar ainda
-				acao = 1;
-				parado = false;
-				animacao_beth_jack(&elisabeth, acao, false);
-				elisabeth.pos_y_sprite -= elisabeth.vel_y_sprite;
-				printf("%d", elisabeth.pos_y_sprite);
-				caindo=0;*/
 				break;
 			case ALLEGRO_KEY_LEFT:
 				keys[ESQUERDA] = true;
@@ -309,8 +295,8 @@ int main()
                  (mapa.BlocoTam)+((mapa.BlocoTam)/2), (mapa.BlocoTam)+((mapa.BlocoTam)/2), 0);
 			}
 			// preciso mudar
-			if(elisabeth.pos_x_sprite + elisabeth.inicio_x > width + 850 &&
-				elisabeth.pos_y_sprite + elisabeth.inicio_y > height - 30)
+			if(elisabeth.pos_x_sprite + elisabeth.inicio_x > width &&
+				elisabeth.pos_y_sprite + elisabeth.inicio_y < height - 75)
 			{
 				elisabeth.pos_x_sprite = 0;
 				elisabeth.pos_y_sprite = 0;
@@ -327,17 +313,9 @@ int main()
               break;
         }
 
-
 			desenha_inimigos(inimigos_png, jack_png, inimigos, &jack, level);
 
 			desenha_elisabeth(elisabeth_png, &elisabeth, keys, DIRECAO);
-
-			al_draw_line(elisabeth.inicio_x + elisabeth.largura_sprite_tela + elisabeth.pos_x_sprite - 30,
-				elisabeth.inicio_y + elisabeth.altura_sprite_tela + elisabeth.pos_y_sprite,
-			inimigos[0].pos_x_sprite + 30,
-				inimigos[0].pos_y_sprite + 30, al_map_rgb(255,255,255), 2);
-
-			al_draw_rectangle((width / 2) - 100, height - 180, width / 2, height - 80, al_map_rgb(255, 255, 255), 2);
 
 			al_flip_display();
 			redesenhar = 0;
@@ -368,9 +346,6 @@ int inicializar()
 		return -1;
 	}
 
-	if (!al_init_primitives_addon())
-		return -1;
-
 	if (!al_init_image_addon())  // Inicializando a biblioteca de imagem
 	{
 		error_msg("A addon de imagens nao foi inicializada");
@@ -395,7 +370,6 @@ int inicializar()
 		error_msg("Falha ao criar a janela");
 		return -1;
 	}
-
 
 	timer = al_create_timer(1.0 / FPS); // Criando o timer
 	if (!timer)
