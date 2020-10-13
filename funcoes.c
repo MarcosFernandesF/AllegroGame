@@ -1,4 +1,3 @@
-
 #include "declaracoes.h"
 
 void error_msg(char* mensagem)
@@ -7,7 +6,8 @@ void error_msg(char* mensagem)
 		"Ocorreu o seguinte erro:", mensagem, NULL, ALLEGRO_MESSAGEBOX_ERROR);
 }
 
-void InitCenario(struct Cenario *mapa){
+void init_cenario(struct Cenario *mapa)
+{
     mapa->MapaColuna = 21;
     mapa->MapaTam = 315;
     mapa->BlocoTam = 32;
