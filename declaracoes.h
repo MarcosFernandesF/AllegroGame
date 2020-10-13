@@ -18,7 +18,7 @@ struct Acao
 	int lin_atual; // Linha atual da folha de sprite
 	int col_folha; // Colunas totais da folha de sprite
 	int lin_folha; // Linhas totais da folha de sprite
-	int frames_min; // Frame minimo da animação 
+	int frames_min; // Frame minimo da animação
 	int frames_max; // Frame maximo da animação
 };
 
@@ -46,7 +46,7 @@ struct Personagem
 
 struct Cenario
 {
-    int MapaColuna; 
+    int MapaColuna;
 	int MapaTam;
 	int BlocoTam;
 };
@@ -66,7 +66,7 @@ void init_dwarf(struct Personagem dwarf[]);
 void init_minotauro(struct Personagem minotauro[]);
 void init_esqueleto(struct Personagem esqueleto[]);
 // Tirando os inimigos do mapa
-void morte_inimigo(struct Sprite monstro[], struct Personagem secundario[], int indice);
+//void morte_inimigo(struct Sprite monstro[], struct Personagem secundario[], int indice);
 // Inicializa mapas
 void InitCenario(struct Cenario* mapa);
 // Desenha os inimigos em posições do mapa e o jack tambem
