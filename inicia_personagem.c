@@ -13,7 +13,7 @@ void init_elisabeth(struct Personagem* elisabeth)
 	elisabeth->inicio_x = 50;
 	elisabeth->inicio_y = height - 180;
 	elisabeth->vel_x_sprite = 5;
-	elisabeth->vel_y_sprite = 12;
+	elisabeth->vel_y_sprite = 13;
 	elisabeth->x_folha = 0;
 	elisabeth->y_folha = 0;
 
@@ -54,6 +54,8 @@ void init_jack(struct Personagem* jack)
 {
 	jack->altura_sprite = 32;
 	jack->largura_sprite = 32;
+	jack->altura_sprite_tela = 112;
+    jack->largura_sprite_tela = 112;
 	jack->x_folha = 0;
 	jack->y_folha = 0;
 
@@ -74,7 +76,6 @@ void init_jack(struct Personagem* jack)
 	jack->animacao[1].frames_min = 0;
 	jack->animacao[1].frames_max = 9;
 }
-
 
 void init_dwarf(struct Personagem dwarf[])
 {
@@ -126,6 +127,7 @@ void init_dwarf(struct Personagem dwarf[])
 	dwarf[0].animacao[3].frames_max = 8;
 
 }
+
 void init_minotauro(struct Personagem minotauro[])
 {
 	minotauro[1].vivo = 1;
