@@ -13,7 +13,7 @@ void init_elisabeth(struct Personagem* elisabeth)
 	elisabeth->inicio_x = 50;
 	elisabeth->inicio_y = height - 180;
 	elisabeth->vel_x_sprite = 5;
-	elisabeth->vel_y_sprite = 30;
+	elisabeth->vel_y_sprite = 12;
 	elisabeth->x_folha = 0;
 	elisabeth->y_folha = 0;
 
@@ -124,7 +124,7 @@ void init_dwarf(struct Personagem dwarf[])
 	dwarf[0].animacao[3].lin_folha = 0;
 	dwarf[0].animacao[3].frames_min = 0;
 	dwarf[0].animacao[3].frames_max = 8;
-	
+
 }
 void init_minotauro(struct Personagem minotauro[])
 {

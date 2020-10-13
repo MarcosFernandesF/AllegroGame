@@ -2,15 +2,21 @@
 
 const int FPS = 60;
 const int num_inimigos = 3;
-enum keys { PULO, ESQUERDA, DIREITA, ESPACO, DIRECAO, GRAVIDADE};
+enum keys {PULO, ESQUERDA, DIREITA, ESPACO, DIRECAO, GRAVIDADE};
 
-bool keys[6] = { false ,false , false, false, true, false };
+bool keys[6] = {false ,false , false, false, true, false };
+
+int vly = 0;
+int caindo=1;
+int grv = 1;
+int pulo = 0;
+int plimite = 0;
 
 ALLEGRO_DISPLAY* display = NULL;
 ALLEGRO_EVENT_QUEUE* fila_eventos = NULL;
 ALLEGRO_TIMER* timer = NULL;
 
-ALLEGRO_BITMAP* elisabeth_png = NULL; 
+ALLEGRO_BITMAP* elisabeth_png = NULL;
 ALLEGRO_BITMAP* jack_png = NULL;
 ALLEGRO_BITMAP* fundo_png = NULL;
 ALLEGRO_BITMAP* folha_bloco = NULL;
@@ -92,13 +98,12 @@ int main()
 		return -1;
 	}
 
-	
+
 	while (!done)
 	{
 		ALLEGRO_EVENT evento;
 		al_wait_for_event(fila_eventos, &evento);
-		int pos_y_anterior = 0;
-		
+
 		switch (level)
 		{
 		case 2:
@@ -176,6 +181,28 @@ int main()
 				parado = false;
 				animacao_beth_jack(&elisabeth, acao, false);
 			}
+
+			if(pulo && elisabeth.pos_y_sprite > plimite - 10){
+                elisabeth.pos_y_sprite += vly;
+                vly = -elisabeth.vel_y_sprite;
+                caindo = 1;
+			}
+			else if(caindo==1){
+                pulo = 0;
+                vly += grv;
+                elisabeth.pos_y_sprite += vly;
+			}
+			else {
+                pulo = 0;
+                vly = 0;
+			}
+			caindo=1;
+
+			if((elisabeth.inicio_y + elisabeth.pos_y_sprite + elisabeth.altura_sprite + 80 >= 675 && elisabeth.inicio_y + elisabeth.pos_y_sprite + elisabeth.altura_sprite + 80 >= 627) ||
+                (elisabeth.inicio_x >0 && elisabeth.inicio_x>width-192))
+            {
+                caindo=0;
+			}
 		}
 
 		else if (evento.type == ALLEGRO_EVENT_KEY_DOWN) // Se a tecla for pressionada
@@ -186,14 +213,17 @@ int main()
 				done = true;
 				break;
 			case ALLEGRO_KEY_UP:
-				// Precisa consertar ainda
+			    if(!pulo && !vly){
+			    plimite = elisabeth.pos_y_sprite;
+			    pulo = 1;
+			    }
+				/* Precisa consertar ainda
 				acao = 1;
 				parado = false;
 				animacao_beth_jack(&elisabeth, acao, false);
-				pos_y_anterior = elisabeth.pos_y_sprite;
 				elisabeth.pos_y_sprite -= elisabeth.vel_y_sprite;
 				printf("%d", elisabeth.pos_y_sprite);
-				keys[GRAVIDADE] = true;
+				caindo=0;*/
 				break;
 			case ALLEGRO_KEY_LEFT:
 				keys[ESQUERDA] = true;
@@ -214,7 +244,7 @@ int main()
 				done = true;
 				break;
 			case ALLEGRO_KEY_UP:
-				keys[PULO] = false;
+				caindo=1;
 				break;
 			case ALLEGRO_KEY_LEFT:
 				keys[ESQUERDA] = false;
@@ -263,7 +293,7 @@ int main()
 			}
 			// preciso mudar
 			if(elisabeth.pos_x_sprite + elisabeth.inicio_x > width &&
-				elisabeth.pos_y_sprite + elisabeth.inicio_y < height - 680) 
+				elisabeth.pos_y_sprite + elisabeth.inicio_y < height - 680)
 			{
 				// isso deu certo preciso colocar no resto
 				elisabeth.pos_x_sprite = 0;
@@ -303,10 +333,10 @@ int main()
 			desenha_elisabeth(elisabeth_png, &elisabeth, keys, DIRECAO);
 
 			al_draw_line(elisabeth.inicio_x + elisabeth.largura_sprite_tela + elisabeth.pos_x_sprite - 30,
-				elisabeth.inicio_y + elisabeth.altura_sprite_tela,
+				elisabeth.inicio_y + elisabeth.altura_sprite_tela + elisabeth.pos_y_sprite,
 			inimigos[0].pos_x_sprite + 30,
 				inimigos[0].pos_y_sprite + 30, al_map_rgb(255,255,255), 2);
-			
+
 			al_draw_rectangle((width / 2) - 100, height - 180, width / 2, height - 80, al_map_rgb(255, 255, 255), 2);
 
 			al_flip_display();
@@ -323,7 +353,7 @@ int main()
 	al_destroy_bitmap(inimigos_png[0]);
 	al_destroy_bitmap(inimigos_png[1]);
 	al_destroy_bitmap(inimigos_png[2]);
-  
+
 	al_destroy_event_queue(fila_eventos);
 
 	return 0;
