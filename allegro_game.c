@@ -466,14 +466,14 @@ int inicializar()
 		return -1;
 	}
 
-	folha_bloco = al_load_bitmap("sprites/blocos.png"); //Carrega blocos
+	folha_bloco = al_load_bitmap("sprites/fundo/blocos.png"); //Carrega blocos
 	if (!folha_bloco)
 	{
 		error_msg("Falha ao carregar a folha de blocos");
 		return -1;
 	}
 
-	fundo_png = al_load_bitmap("sprites/background1.png"); //Carregando o background do jogo
+	fundo_png = al_load_bitmap("sprites/fundo/Background.png"); //Carregando o background do jogo
 	if (!fundo_png)
 	{
 		error_msg("Falha ao carregar o fundo do jogo");
