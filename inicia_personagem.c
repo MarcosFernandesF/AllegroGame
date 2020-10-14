@@ -30,7 +30,7 @@ void init_elisabeth(struct Personagem* elisabeth)
 	elisabeth->animacao[1].col_folha = 7;
 	elisabeth->animacao[1].lin_folha = 0;
 	elisabeth->animacao[1].frames_min = 0;
-	elisabeth->animacao[1].frames_max = 9;
+	elisabeth->animacao[1].frames_max = 6;
 
 	// Ataque
 	elisabeth->animacao[2].col_atual = 0;

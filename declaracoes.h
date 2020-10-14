@@ -5,10 +5,13 @@
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_native_dialog.h>
+#include <allegro5/allegro_audio.h>
+#include <allegro5/allegro_acodec.h>
 #include <stdio.h>
 #define width 1000
 #define height 750
 
+// Struct para cada ação pre-definida
 struct Acao
 {
 	bool esqueleto; // Controle para saber se a animacao e do Esqueleto (animação diferente das demais)
@@ -21,6 +24,7 @@ struct Acao
 	int frames_max; // Frame maximo da animação
 };
 
+// Caracteristica dos personagens
 struct Personagem
 {
 	struct Acao animacao[5];
@@ -43,6 +47,7 @@ struct Personagem
 	int y_folha; // Y da folha de sprite
 };
 
+// Cenario
 struct Cenario
 {
     int MapaColuna; // Numero de colunas
@@ -64,8 +69,6 @@ void init_jack(struct Personagem* jack);
 void init_dwarf(struct Personagem dwarf[]);
 void init_minotauro(struct Personagem minotauro[]);
 void init_esqueleto(struct Personagem esqueleto[]);
-// Tirando os inimigos do mapa
-//void morte_inimigo(struct Sprite monstro[], struct Personagem secundario[], int indice);
 // Inicializa mapas
 void init_cenario(struct Cenario* mapa);
 // Desenha os inimigos em posições do mapa e o jack tambem
@@ -73,6 +76,6 @@ void desenha_inimigos(ALLEGRO_BITMAP* monstro_png [], ALLEGRO_BITMAP* jack_png, 
 // Desenha Elisabeth
 void desenha_elisabeth(ALLEGRO_BITMAP* elisabeth_png, struct Personagem* elisabeth, bool keys[], int DIRECAO);
 // Colisao de personagens
-void colisao_personagens(struct Personagem* elisabeth, struct Personagem inimigos[], int indice);
-//Colisao com os blocos
+//void colisao_personagens(struct Personagem* elisabeth, struct Personagem inimigos[], int indice);
+// Colisao com os blocos
 int colisao_blocos(struct Personagem* elisabeth, int caindo, int level);
