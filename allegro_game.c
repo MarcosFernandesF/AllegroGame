@@ -45,6 +45,9 @@ ALLEGRO_BITMAP* jack_png = NULL; // Folha de sprite do Jack
 ALLEGRO_BITMAP* fundo_png = NULL; // Fundo do mapa
 ALLEGRO_BITMAP* folha_bloco = NULL; // Folha de sprite dos blocos
 ALLEGRO_BITMAP* inimigos_png[3] = { NULL, NULL }; // Folha de sprite dos inimigos
+ALLEGRO_FONT* font100 = NULL; // Fonte
+ALLEGRO_FONT* font85 = NULL; // Fonte
+ALLEGRO_FONT* font30 = NULL; // Fonte
 
 ALLEGRO_BITMAP* menu_fundo1 = NULL; // Parte 1 do fundo do menu
 ALLEGRO_BITMAP* menu_fundo2 = NULL; // Parte 2 do fundo do menu
@@ -55,7 +58,7 @@ ALLEGRO_BITMAP* menu_sobre = NULL; // Botao de informacoes
 ALLEGRO_BITMAP* menu_historia = NULL; // Botao onde aparece a historia
 
 // Mapa 1
-int mapa1[] = {5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+int mapa1[] =		{5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
                      5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
                      5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
                      5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
@@ -72,7 +75,7 @@ int mapa1[] = {5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 // Mapa 2
-int mapa2[] = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+int mapa2[] =		{ 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
 					 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
 					 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5,
 					 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
@@ -89,7 +92,7 @@ int mapa2[] = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
 					 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 // Mapa 3
-int mapa3[] = {5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+int mapa3[] =		{5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
                      5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
                      5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
                      5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
@@ -108,20 +111,22 @@ int main()
 {
 	bool redesenhar = true; // Variavel de controle para redesenhar algo
 	bool done = false; // Utilizado no laço principal
+	bool gameover = false; // Saber se o jogo acabou
+	bool win = false; // Saber se venceu o jogo
 	bool parado = true; // Variavel para saber se esta parado ou nao
 	int level = 0; // Variavel para saber qual a fase atual
 	int indice;  // Indices utilizados em todo o codigo
-	int acao; // Utilizado para saber qual a a��o necessaria do personagem
-    int vel_gravidade = 0; // Velocidade da gravidade
-    int caindo=1; // Variavel que controla se ta caindo
-    int gravidade = 1; // Gravidade
-    int pulo = 0; // Variavel de controle para o pulo
-    int pulo_limite = 0; // Posicao anterior ao pular
+	int acao; // Utilizado para saber qual a ação necessaria do personagem
+  int vel_gravidade = 0; // Velocidade da gravidade
+  int caindo=1; // Variavel que controla se ta caindo
+  int gravidade = 1; // Gravidade
+  int pulo = 0; // Variavel de controle para o pulo
+  int pulo_limite = 0; // Posicao anterior ao pular
 
 	struct Personagem elisabeth;  // Personagem Elisabeth
 	struct Personagem jack; // Personagem Jack
 	struct Personagem inimigos[3]; // Personagem secundario
-    struct Cenario mapa; // Mapa
+  struct Cenario mapa; // Mapa
 
 	init_elisabeth(&elisabeth);	//Inicialização da Elisabeth
 	init_jack(&jack); // Inicialização do Jack
@@ -154,19 +159,21 @@ int main()
             elisabeth.altura_sprite_tela = 112;
             elisabeth.largura_sprite_tela = 112;
             break;
-		case 2:
-			elisabeth.inicio_x = -100;
-			elisabeth.inicio_y = -10;
-			break;
-		case 3:
-			elisabeth.inicio_x = -100;
-			elisabeth.inicio_y = 675 - elisabeth.altura_sprite_tela;
-			break;
+        case 2:
+            elisabeth.inicio_x = -100;
+            elisabeth.inicio_y = -10;
+            break;
+        case 3:
+            elisabeth.inicio_x = -100;
+            elisabeth.inicio_y = 675 - elisabeth.altura_sprite_tela;
+            break;
 		}
 
 		if (evento.type == ALLEGRO_EVENT_TIMER)
 		{
 			redesenhar = true;
+
+			limite_elisabeth(&elisabeth);
 
 			animacao_beth_jack (&jack, 1, true); // Animação do Jack na fase 3
 
@@ -178,6 +185,7 @@ int main()
 					// Animação do anão
 					animacao_inimigos(inimigos, 2, indice);
 					break;
+					
 				case 1:
 					// Animação do minotauro
 					animacao_inimigos(inimigos, 2, indice);
@@ -188,6 +196,15 @@ int main()
 					break;
 				}
 			}
+			 for (indice2 = 0; indice2 < num_inimigos; indice2++)
+			 {
+				gameover = colisao_personagens(&elisabeth, inimigos, indice2, level, keys, ESPACO);
+				if (inimigos[1].vivo_1[2] == 0)
+				{
+					win = true;
+				}
+			 }
+
 			if (parado) // Parado realiza animação padrão
 			{
 				acao = 0;
@@ -217,6 +234,7 @@ int main()
 
 			if (keys[ESPACO]) // Comando para bater
 			{
+				printf("%d", elisabeth.vidas_1[0]);
 				acao = 2;
 				parado = false;
 				animacao_beth_jack(&elisabeth, acao, false);
@@ -334,10 +352,13 @@ int main()
 
 			// Desenha o fundo
 			al_draw_scaled_bitmap(fundo_png, 0, 0, 576, 324, 0, 0,width,height, 0);
+			al_draw_textf(font30, al_map_rgb(255, 255, 255), 50, 35, 0, "Vidas: %d", elisabeth.vidas_1[0]);
 
-			// Dependendo do level desenha blocos diferentes
-			switch(level)
-			{
+      if (!gameover)
+      {
+					// Dependendo do level desenha blocos diferentes
+					switch(level)
+			  {
             case 0:
                 al_draw_scaled_bitmap(menu_fundo1, 0, 0, 576, 324, 0, 0, width, height, 0);
                 al_draw_scaled_bitmap(menu_fundo2, 0, 0, 576, 324, 0, 0, width, height, 0);
@@ -350,54 +371,66 @@ int main()
                 al_draw_scaled_bitmap(menu_sobre, 0, 0, 300, 301, 510, height/2 +220, 100, 100, 0);
                 al_draw_scaled_bitmap(menu_historia, 0, 0, 214, 215, 390, height/2 +220, 100, 100, 0);
                 break;
-			case 1:
-				for (int i = 0; i<mapa.MapaTam; i++)
-				{
-					al_draw_scaled_bitmap(folha_bloco, (mapa.BlocoTam) * (mapa1[i]), 0, mapa.BlocoTam, mapa.BlocoTam,
-					((mapa.BlocoTam)+((mapa.BlocoTam)/2)) * (i%(mapa.MapaColuna)), ((mapa.BlocoTam)+((mapa.BlocoTam)/2)) * (i/(mapa.MapaColuna)),
-					 (mapa.BlocoTam)+((mapa.BlocoTam)/2), (mapa.BlocoTam)+((mapa.BlocoTam)/2), 0);
-				}
-				// Transição de Fase
-				if(elisabeth.pos_x_sprite + elisabeth.inicio_x > width &&
-					elisabeth.pos_y_sprite + elisabeth.inicio_y < height - 680)
-				{
-					elisabeth.pos_x_sprite = 0;
-					elisabeth.pos_y_sprite = 0;
-					level++;
-				}
-				  break;
-			case 2:
-				for (int j = 0; j<mapa.MapaTam; j++)
-				{
-					al_draw_scaled_bitmap(folha_bloco, (mapa.BlocoTam) * (mapa2[j]), 0, mapa.BlocoTam, mapa.BlocoTam,
-					((mapa.BlocoTam)+((mapa.BlocoTam)/2)) * (j%(mapa.MapaColuna)), ((mapa.BlocoTam)+((mapa.BlocoTam)/2)) * (j/(mapa.MapaColuna)),
-					 (mapa.BlocoTam)+((mapa.BlocoTam)/2), (mapa.BlocoTam)+((mapa.BlocoTam)/2), 0);
-				}
-				// Transição de Fase
-				if(elisabeth.pos_x_sprite + elisabeth.inicio_x > width &&
-					elisabeth.pos_y_sprite + elisabeth.inicio_y < height - 75)
-				{
-					elisabeth.pos_x_sprite = 0;
-					elisabeth.pos_y_sprite = 0;
-					level++;
-				}
-				break;
-			case 3:
-				for (int i = 0; i<mapa.MapaTam; i++)
-				{
-					al_draw_scaled_bitmap(folha_bloco, (mapa.BlocoTam) * (mapa3[i]), 0, mapa.BlocoTam, mapa.BlocoTam,
-					((mapa.BlocoTam)+((mapa.BlocoTam)/2)) * (i%(mapa.MapaColuna)), ((mapa.BlocoTam)+((mapa.BlocoTam)/2)) * (i/(mapa.MapaColuna)),
-					 (mapa.BlocoTam)+((mapa.BlocoTam)/2), (mapa.BlocoTam)+((mapa.BlocoTam)/2), 0);
-				}
-				  break;
-			}
+             case 1:
+                for (int i = 0; i<mapa.MapaTam; i++)
+                {
+                  al_draw_scaled_bitmap(folha_bloco, (mapa.BlocoTam) * (mapa1[i]), 0, mapa.BlocoTam, mapa.BlocoTam,
+                  ((mapa.BlocoTam)+((mapa.BlocoTam)/2)) * (i%(mapa.MapaColuna)), ((mapa.BlocoTam)+((mapa.BlocoTam)/2)) * (i/(mapa.MapaColuna)),
+                   (mapa.BlocoTam)+((mapa.BlocoTam)/2), (mapa.BlocoTam)+((mapa.BlocoTam)/2), 0);
+                }
+                // Transição de Fase
+                if(elisabeth.pos_x_sprite + elisabeth.inicio_x > width &&
+                  elisabeth.pos_y_sprite + elisabeth.inicio_y < height - 680)
+                {
+                  elisabeth.pos_x_sprite = 0;
+                  elisabeth.pos_y_sprite = 0;
+                  level++;
+                }
+                  break;
+              case 2:
+                for (int j = 0; j<mapa.MapaTam; j++)
+                {
+                  al_draw_scaled_bitmap(folha_bloco, (mapa.BlocoTam) * (mapa2[j]), 0, mapa.BlocoTam, mapa.BlocoTam,
+                  ((mapa.BlocoTam)+((mapa.BlocoTam)/2)) * (j%(mapa.MapaColuna)), ((mapa.BlocoTam)+((mapa.BlocoTam)/2)) * (j/(mapa.MapaColuna)),
+                   (mapa.BlocoTam)+((mapa.BlocoTam)/2), (mapa.BlocoTam)+((mapa.BlocoTam)/2), 0);
+                }
+                // Transição de Fase
+                if(elisabeth.pos_x_sprite + elisabeth.inicio_x > width &&
+                  elisabeth.pos_y_sprite + elisabeth.inicio_y < height - 75)
+                    {
+                      elisabeth.pos_x_sprite = 0;
+                      elisabeth.pos_y_sprite = 0;
+                      level++;
+                    }
+                    break;
+                 case 3:
+                    for (int i = 0; i < mapa.MapaTam; i++)
+                    {
+                      al_draw_scaled_bitmap(folha_bloco, (mapa.BlocoTam) * (mapa3[i]), 0, mapa.BlocoTam, mapa.BlocoTam,
+                        ((mapa.BlocoTam) + ((mapa.BlocoTam) / 2)) * (i % (mapa.MapaColuna)), ((mapa.BlocoTam) + ((mapa.BlocoTam) / 2)) * (i / (mapa.MapaColuna)),
+                        (mapa.BlocoTam) + ((mapa.BlocoTam) / 2), (mapa.BlocoTam) + ((mapa.BlocoTam) / 2), 0);
+                    }
+                    if (win)
+                    {
+                      al_draw_textf(font85, al_map_rgb(255, 255, 255), width / 2 - 180, 100, 0, "Parabens");
+                      al_draw_textf(font85, al_map_rgb(255, 255, 255), width / 2 - 450, 180, 0, "Voce resgatou o Jack");
+                    }
+                    break;
+           }
 
-			// Desenha inimigos em lugares do mapa dependendo do level
-			desenha_inimigos(inimigos_png, jack_png, inimigos, &jack, level);
+					// Desenha inimigos em lugares do mapa dependendo do level
+					desenha_inimigos(inimigos_png, jack_png, inimigos, &jack, level);
 
-			// Desenha Elisabeth
-			desenha_elisabeth(elisabeth_png, &elisabeth, keys, DIRECAO);
+					// Desenha Elisabeth
+					desenha_elisabeth(elisabeth_png, &elisabeth, keys, DIRECAO);
 
+				}
+
+				else
+				{
+					al_draw_textf(font100, al_map_rgb(255, 255, 255), width / 2 - 250, height / 2 - 50, 0, "Game Over");
+				}
+		
 			al_flip_display();
 			redesenhar = 0;
 
@@ -413,6 +446,10 @@ int main()
 	al_destroy_bitmap(inimigos_png[0]);
 	al_destroy_bitmap(inimigos_png[1]);
 	al_destroy_bitmap(inimigos_png[2]);
+	al_destroy_audio_stream(musica);
+	al_destroy_font(font100);
+	al_destroy_font(font85);
+	al_destroy_font(font30);
 
 	al_destroy_event_queue(fila_eventos);
 
@@ -432,6 +469,8 @@ int inicializar()
 		error_msg("A addon de imagens nao foi inicializada");
 		return -1;
 	}
+
+	al_init_primitives_addon();
 
 	if (!al_install_audio()) // Instalando o áudio
 	{
@@ -457,12 +496,48 @@ int inicializar()
 		return -1;
 	}
 
+	if (!al_init_font_addon())
+	{
+		error_msg("Falha ao inicializar addon da fonte");
+		return -1;
+	}
+	if (!al_init_ttf_addon())
+	{
+		error_msg("Falha ao inicializar ttf addon");
+		return -1;
+	}
+
+	font100 = al_load_font("sprites/Font/Planes_ValMore.ttf", 100, 0);
+
+	if (!font100)
+	{
+		error_msg("Falha ao carregar a fonte");
+		return -1;
+	}
+	font85 = al_load_font("sprites/Font/Planes_ValMore.ttf", 85, 0);
+
+	if (!font85)
+	{
+		error_msg("Falha ao carregar a fonte");
+		return -1;
+	}
+	
+	font30 = al_load_font("sprites/Font/Planes_ValMore.ttf", 30, 0);
+
+	if (!font30)
+	{
+		error_msg("Falha ao carregar a fonte");
+		return -1;
+	}
+
 	display = al_create_display(width, height);  // Criando o display
 	if (!display)
 	{
 		error_msg("Falha ao criar a janela");
 		return -1;
 	}
+
+	al_set_window_title(display, "O Resgate de Jack");
 
 	timer = al_create_timer(1.0 / FPS); // Criando o timer
 	if (!timer)
@@ -495,7 +570,7 @@ int inicializar()
 
 	al_set_audio_stream_playmode(musica, ALLEGRO_PLAYMODE_LOOP); // Deixa a musica em LOOP
 
-	al_set_audio_stream_gain(musica, 0.5);*/
+	al_set_audio_stream_gain(musica, 0.4);
 
 	elisabeth_png = al_load_bitmap("sprites/Principais/Elisabeth.png"); // Carregando a folha de sprites
 	if (!elisabeth_png)
