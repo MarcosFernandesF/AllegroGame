@@ -4,12 +4,26 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_image.h>
+#include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_native_dialog.h>
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
 #include <stdio.h>
 #define width 1000
 #define height 750
+
+// Limites para hitbox
+struct Limites
+{
+	int x0;
+	int x1;
+	int y0;
+	int y1;
+	int x2; // Posições do 2º inimigo repetido (esquelto/dwarf)
+	int x3; // Posições do 2º inimigo repetido (esquelto/dwarf)
+	int y2; // Posições do 2º inimigo repetido (esquelto/dwarf)
+	int y3; // Posições do 2º inimigo repetido (esquelto/dwarf)
+};
 
 // Struct para cada ação pre-definida
 struct Acao
@@ -27,10 +41,12 @@ struct Acao
 // Caracteristica dos personagens
 struct Personagem
 {
-	struct Acao animacao[5];
-	int vivo; // Vivo ou morto
-	int vidas_1; // Vidas
-	int vidas_2; // Vida do segundo inimigo
+	struct Acao animacao[4]; // Animações de cada personagem
+	struct Limites hitbox; // Limites de hitbox de cada personagem
+	int vivo_1[3]; // Vivo ou morto primeiro inimigo em cada fase
+	int vivo_2[3]; // Vivo ou morto segundo inimigo em cada fase
+	int vidas_1; // Vidas do primeiro personagem
+	int vidas_2; // Vidas do segundo personagem
 	int altura_sprite; // Na folha
 	int largura_sprite;  // Na folha
 	int altura_sprite_tela; // Na tela
@@ -76,6 +92,10 @@ void desenha_inimigos(ALLEGRO_BITMAP* monstro_png [], ALLEGRO_BITMAP* jack_png, 
 // Desenha Elisabeth
 void desenha_elisabeth(ALLEGRO_BITMAP* elisabeth_png, struct Personagem* elisabeth, bool keys[], int DIRECAO);
 // Colisao de personagens
-//void colisao_personagens(struct Personagem* elisabeth, struct Personagem inimigos[], int indice);
+bool colisao_personagens(struct Personagem* elisabeth, struct Personagem inimigos[], int indice, int level, bool keys[], int ATAQUE);
 // Colisao com os blocos
 int colisao_blocos(struct Personagem* elisabeth, int caindo, int level);
+// Armazena os limites da elisabeth a cada momento
+void limite_elisabeth(struct Personagem* elisabeth);
+// Armazena os limites dos inimigos // É chamada dentro da função desenho
+void limite_inimigos(struct Personagem inimigos[], int level);
