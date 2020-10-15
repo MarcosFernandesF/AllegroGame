@@ -3,7 +3,7 @@
 // Ainda sera utilizado
 bool colisao_personagens(struct Personagem* elisabeth, struct Personagem inimigos[], int indice, int level, bool keys[], int ATAQUE)
 {
-    if (elisabeth->vidas_1 == 0)
+    if (elisabeth->vidas_1[0] == 0)
     {
         return true;
     }
@@ -17,10 +17,11 @@ bool colisao_personagens(struct Personagem* elisabeth, struct Personagem inimigo
                 elisabeth->hitbox.y1 > inimigos[indice].hitbox.y0 &&
                 elisabeth->hitbox.y0 < inimigos[indice].hitbox.y1)
             {
+                // Se estiver atacando
                 if (keys[ATAQUE])
                 {
-                    inimigos[indice].vidas_1--;
-                    if (inimigos[indice].vidas_1 == 0)
+                    inimigos[indice].vidas_1[level - 1]--;
+                    if (inimigos[indice].vidas_1[level - 1] == 0)
                     {
                         inimigos[indice].vivo_1[level - 1] = 0;
                     }
@@ -28,10 +29,10 @@ bool colisao_personagens(struct Personagem* elisabeth, struct Personagem inimigo
                 // Se não estiver
                 else
                 {
-                    elisabeth->vidas_1--;
+                    elisabeth->vidas_1[0]--;
                     
-                    inimigos[indice].vidas_1--;
-                    if (inimigos[indice].vidas_1 == 0)
+                    inimigos[indice].vidas_1[level - 1]--;
+                    if (inimigos[indice].vidas_1[level - 1] == 0)
                     {
                         inimigos[indice].vivo_1[level - 1] = 0;
                     }
@@ -49,8 +50,8 @@ bool colisao_personagens(struct Personagem* elisabeth, struct Personagem inimigo
                 // Se estiver atacando
                 if (keys[ATAQUE])
                 {
-                    inimigos[indice].vidas_2--;
-                    if (inimigos[indice].vidas_2 == 0)
+                    inimigos[indice].vidas_2[level - 1]--;
+                    if (inimigos[indice].vidas_2[level - 1] == 0)
                     {
                         inimigos[indice].vivo_2[level - 1] = 0;
                     }
@@ -58,9 +59,9 @@ bool colisao_personagens(struct Personagem* elisabeth, struct Personagem inimigo
                 // Se não estiver
                 else
                 {
-                    elisabeth->vidas_1--;
-                    inimigos[indice].vidas_2--;
-                    if (inimigos[indice].vidas_2 == 0)
+                    elisabeth->vidas_1[0]--;
+                    inimigos[indice].vidas_2[level - 1]--;
+                    if (inimigos[indice].vidas_2[level - 1] == 0)
                     {
                         inimigos[indice].vivo_2[level - 1] = 0;
                     }

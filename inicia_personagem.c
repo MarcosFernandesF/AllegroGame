@@ -2,7 +2,7 @@
 
 void init_elisabeth(struct Personagem* elisabeth)
 {
-	elisabeth->vidas_1 = 3;
+	elisabeth->vidas_1[0] = 3;
 	elisabeth->altura_sprite = 32;
 	elisabeth->largura_sprite = 32;
 	elisabeth->altura_sprite_tela = 112;
@@ -81,8 +81,8 @@ void init_dwarf(struct Personagem dwarf[])
 	// Inicializei um por um porque estava bugando 
 	dwarf[0].vivo_1[0] = 1; dwarf[0].vivo_1[1] = 1;
 	dwarf[0].vivo_2[0] = 1; dwarf[0].vivo_2[1] = 1; 
-	dwarf[0].vidas_1 = 1;
-	dwarf[0].vidas_2 = 1;
+	dwarf[0].vidas_1[0] = 1; dwarf[0].vidas_1[1] = 1;
+	dwarf[0].vidas_2[0] = 1; dwarf[0].vidas_2[1] = 1;
 	dwarf[0].altura_sprite = 32;
 	dwarf[0].largura_sprite = 38;
 	dwarf[0].altura_sprite_tela = 112;
@@ -133,7 +133,7 @@ void init_dwarf(struct Personagem dwarf[])
 void init_minotauro(struct Personagem minotauro[])
 {
 	minotauro[1].vivo_1[2] = 1;
-	minotauro[1].vidas_1 = 1000;
+	minotauro[1].vidas_1[2] = 250;
 	minotauro[1].altura_sprite = 96;
 	minotauro[1].largura_sprite = 96;
 	minotauro[1].altura_sprite_tela = 396;
@@ -182,8 +182,8 @@ void init_esqueleto(struct Personagem esqueleto[])
 {
 	esqueleto[2].vivo_1[0] = 1; esqueleto[2].vivo_1[1] = 1;
 	esqueleto[2].vivo_2[0] = 1; esqueleto[2].vivo_2[1] = 1;
-	esqueleto[2].vidas_1 = 1;
-	esqueleto[2].vidas_2 = 1;
+	esqueleto[2].vidas_1[0] = 1; esqueleto[2].vidas_1[1] = 1;
+	esqueleto[2].vidas_2[0] = 1; esqueleto[2].vidas_2[1] = 1;
 	esqueleto[2].altura_sprite = 150;
 	esqueleto[2].largura_sprite = 150;
 	esqueleto[2].altura_sprite_tela = 230;
