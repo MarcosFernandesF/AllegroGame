@@ -30,27 +30,30 @@ void animacao_beth_jack(struct Personagem* beth_jack, int acao, bool jack)
 
 void animacao_inimigos(struct Personagem inimigos[], int acao, int indice)
 {
+
 	inimigos[indice].animacao[acao].frames_min++;
 	inimigos[indice].y_folha = inimigos[indice].animacao[acao].lin_atual * inimigos[indice].altura_sprite;
 
-	if (inimigos[indice].animacao[acao].frames_min >= inimigos[indice].animacao[acao].frames_max)
-	{
-		inimigos[indice].animacao[acao].frames_min = 0;
-		inimigos[indice].animacao[acao].col_atual++;
-
-		if (inimigos[indice].animacao[acao].col_atual >= inimigos[indice].animacao[acao].col_folha)
+		if (inimigos[indice].animacao[acao].frames_min >= inimigos[indice].animacao[acao].frames_max)
 		{
-			// Animação do Esqueleto e diferente por conta da folha de sprites ter apenas uma linha
-			if (inimigos[indice].animacao[acao].esqueleto)
+
+			inimigos[indice].animacao[acao].frames_min = 0;
+			inimigos[indice].animacao[acao].col_atual++;
+
+			if (inimigos[indice].animacao[acao].col_atual >= inimigos[indice].animacao[acao].col_folha)
 			{
-				inimigos[indice].animacao[acao].col_atual = inimigos[indice].animacao[acao].col_atual_old;
+				// Animação do Esqueleto e diferente por conta da folha de sprites ter apenas uma linha
+				if (inimigos[indice].animacao[acao].esqueleto)
+				{
+					inimigos[indice].animacao[acao].col_atual = inimigos[indice].animacao[acao].col_atual_old;
+				}
+				else
+				{
+					inimigos[indice].animacao[acao].col_atual = 0;
+				}
 			}
-			else
-			{
-				inimigos[indice].animacao[acao].col_atual = 0;
-			}
+
+			inimigos[indice].x_folha = inimigos[indice].animacao[acao].col_atual * inimigos[indice].largura_sprite;
 		}
 
-		inimigos[indice].x_folha = inimigos[indice].animacao[acao].col_atual * inimigos[indice].largura_sprite;
-	}
 }

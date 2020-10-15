@@ -90,7 +90,7 @@ int main()
 	bool done = false; // Utilizado no laço principal
 	bool parado = true; // Variavel para saber se esta parado ou nao
 	int level = 1; // Variavel para saber qual a fase atual
-	int indice;  // Indices utilizados em todo o codigo
+	int indice, indice2;  // Indices utilizados em todo o codigo
 	int acao; // Utilizado para saber qual a a��o necessaria do personagem
     int vel_gravidade = 0; // Velocidade da gravidade
     int caindo=1; // Variavel que controla se ta caindo
@@ -139,6 +139,8 @@ int main()
 		{
 			redesenhar = true;
 
+			limite_elisabeth(&elisabeth);
+
 			animacao_beth_jack (&jack, 1, true); // Animação do Jack na fase 3
 
 			 for (indice = 0; indice < num_inimigos; indice++)
@@ -149,6 +151,7 @@ int main()
 					// Animação do anão
 					animacao_inimigos(inimigos, 2, indice);
 					break;
+					
 				case 1:
 					// Animação do minotauro
 					animacao_inimigos(inimigos, 2, indice);
@@ -159,6 +162,11 @@ int main()
 					break;
 				}
 			}
+			 for (indice2 = 0; indice2 < num_inimigos; indice2++)
+			 {
+				done = colisao_personagens(&elisabeth, inimigos, indice2, level, keys, ESPACO);
+			 }
+
 			if (parado) // Parado realiza animação padrão
 			{
 				acao = 0;
@@ -188,6 +196,7 @@ int main()
 
 			if (keys[ESPACO]) // Comando para bater
 			{
+				printf("%d", inimigos[2].vivo_1[0]);
 				acao = 2;
 				parado = false;
 				animacao_beth_jack(&elisabeth, acao, false);
@@ -239,6 +248,7 @@ int main()
 				keys[DIREITA] = true;
 				break;
 			case ALLEGRO_KEY_SPACE:
+				printf("%d", elisabeth.vidas_1);
 				keys[ESPACO] = true;
 				break;
 			}
@@ -330,6 +340,11 @@ int main()
 			// Desenha Elisabeth
 			desenha_elisabeth(elisabeth_png, &elisabeth, keys, DIRECAO);
 
+			al_draw_line(elisabeth.inicio_x + elisabeth.largura_sprite_tela + elisabeth.pos_x_sprite - 35,
+				elisabeth.inicio_y + elisabeth.altura_sprite_tela + elisabeth.pos_y_sprite,
+				inimigos[0].pos_x_sprite + inimigos[0].largura_sprite_tela - 25,
+				inimigos[0].pos_y_sprite_2 + inimigos[0].altura_sprite_tela + 5, al_map_rgb(255, 255, 255), 2);
+
 			al_flip_display();
 			redesenhar = 0;
 
@@ -365,6 +380,8 @@ int inicializar()
 		return -1;
 	}
 
+	al_init_primitives_addon();
+
 	if (!al_install_audio()) // Instalando o áudio
 	{
 		error_msg("Falha ao instalar o audio");
@@ -395,6 +412,8 @@ int inicializar()
 		error_msg("Falha ao criar a janela");
 		return -1;
 	}
+
+	al_set_window_title(display, "O Resgate de Jack");
 
 	timer = al_create_timer(1.0 / FPS); // Criando o timer
 	if (!timer)
@@ -427,7 +446,7 @@ int inicializar()
 
 	al_set_audio_stream_playmode(musica, ALLEGRO_PLAYMODE_LOOP); // Deixa a musica em LOOP
 
-	al_set_audio_stream_gain(musica, 0.5);
+	al_set_audio_stream_gain(musica, 0);
 
 	elisabeth_png = al_load_bitmap("sprites/Principais/Elisabeth.png"); // Carregando a folha de sprites
 	if (!elisabeth_png)

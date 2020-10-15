@@ -1,22 +1,75 @@
 #include "declaracoes.h"
 
 // Ainda sera utilizado
-/*void colisao_personagens(struct Personagem* elisabeth, struct Personagem inimigos[], int indice)
+bool colisao_personagens(struct Personagem* elisabeth, struct Personagem inimigos[], int indice, int level, bool keys[], int ATAQUE)
 {
-	if (inimigos[indice].vivo == 1)
-	{
-		if (indice == 0)
-		{
-			 if (elisabeth->inicio_x + elisabeth->largura_sprite_tela + elisabeth->pos_x_sprite - 30
-				> (width / 2) - 100 && elisabeth->inicio_x + elisabeth->pos_x_sprite < width / 2
-				&& elisabeth->inicio_y + elisabeth->altura_sprite_tela + elisabeth->pos_y_sprite > height - 180 &&
-				elisabeth->inicio_y + 30 + elisabeth->pos_y_sprite < height - 80)
-			{
-				elisabeth->vidas_1--;
-			}
-		}
-	}
-}*/
+    if (elisabeth->vidas_1 == 0)
+    {
+        return true;
+    }
+    else
+    {
+        // Se o inimigo estiver vivo na respectiva fase
+        if (inimigos[indice].vivo_1[level - 1] == 1)
+        {
+            if (elisabeth->hitbox.x1 > inimigos[indice].hitbox.x0 &&
+                elisabeth->hitbox.x0 < inimigos[indice].hitbox.x1 &&
+                elisabeth->hitbox.y1 > inimigos[indice].hitbox.y0 &&
+                elisabeth->hitbox.y0 < inimigos[indice].hitbox.y1)
+            {
+                if (keys[ATAQUE])
+                {
+                    inimigos[indice].vidas_1--;
+                    if (inimigos[indice].vidas_1 == 0)
+                    {
+                        inimigos[indice].vivo_1[level - 1] = 0;
+                    }
+                }
+                // Se não estiver
+                else
+                {
+                    elisabeth->vidas_1--;
+                    
+                    inimigos[indice].vidas_1--;
+                    if (inimigos[indice].vidas_1 == 0)
+                    {
+                        inimigos[indice].vivo_1[level - 1] = 0;
+                    }
+                }
+            }
+                
+        }
+        if (inimigos[indice].vivo_2[level - 1] == 1)
+        {
+            if (elisabeth->hitbox.x1 > inimigos[indice].hitbox.x2 &&
+                elisabeth->hitbox.x0 < inimigos[indice].hitbox.x3 &&
+                elisabeth->hitbox.y1 > inimigos[indice].hitbox.y2 &&
+                elisabeth->hitbox.y0 < inimigos[indice].hitbox.y3)
+            {
+                // Se estiver atacando
+                if (keys[ATAQUE])
+                {
+                    inimigos[indice].vidas_2--;
+                    if (inimigos[indice].vidas_2 == 0)
+                    {
+                        inimigos[indice].vivo_2[level - 1] = 0;
+                    }
+                }
+                // Se não estiver
+                else
+                {
+                    elisabeth->vidas_1--;
+                    inimigos[indice].vidas_2--;
+                    if (inimigos[indice].vidas_2 == 0)
+                    {
+                        inimigos[indice].vivo_2[level - 1] = 0;
+                    }
+                }
+            }
+        }        
+        return false;
+    }
+}
 
 int colisao_blocos(struct Personagem* elisabeth, int caindo, int level)
 {
@@ -138,4 +191,52 @@ int colisao_blocos(struct Personagem* elisabeth, int caindo, int level)
             break;
         }
     return caindo;
+}
+
+void limite_elisabeth(struct Personagem* elisabeth)
+{
+    elisabeth->hitbox.x0 = elisabeth->inicio_x + elisabeth->pos_x_sprite + 20;
+    elisabeth->hitbox.x1 = elisabeth->inicio_x + elisabeth->largura_sprite_tela + elisabeth->pos_x_sprite - 35;
+    elisabeth->hitbox.y0 = elisabeth->inicio_y + elisabeth->pos_y_sprite + 35;
+    elisabeth->hitbox.y1 = elisabeth->inicio_y + elisabeth->altura_sprite_tela + elisabeth->pos_y_sprite;
+}
+
+void limite_inimigos(struct Personagem inimigos[], int level)
+{
+    if (level == 3)
+    {
+        // Hitbox Fixo Minotauro 
+        inimigos[1].hitbox.x0 = inimigos[1].pos_x_sprite + 120;
+        inimigos[1].hitbox.x1 = inimigos[1].pos_x_sprite + inimigos[1].largura_sprite_tela - 110;
+        inimigos[1].hitbox.y0 = inimigos[1].pos_y_sprite + 95;
+        inimigos[1].hitbox.y1 = inimigos[1].pos_y_sprite + inimigos[1].altura_sprite_tela - 120;
+    }
+
+    else
+    {
+        // Hitbox Fixo Dwarf 1
+        inimigos[0].hitbox.x0 = inimigos[0].pos_x_sprite + 40;
+        inimigos[0].hitbox.x1 = inimigos[0].pos_x_sprite + inimigos[0].largura_sprite_tela - 25;
+        inimigos[0].hitbox.y0 = inimigos[0].pos_y_sprite + 30;
+        inimigos[0].hitbox.y1 = inimigos[0].pos_y_sprite + inimigos[0].altura_sprite_tela + 5;
+
+        // Hitbox Fixo Dwarf 2
+        inimigos[0].hitbox.x2 = inimigos[0].pos_x_sprite_2 + 40;
+        inimigos[0].hitbox.x3 = inimigos[0].pos_x_sprite_2 + inimigos[0].largura_sprite_tela - 25;
+        inimigos[0].hitbox.y2 = inimigos[0].pos_y_sprite_2 + 30;
+        inimigos[0].hitbox.y3 = inimigos[0].pos_y_sprite_2 + inimigos[0].altura_sprite_tela + 5;
+
+        // Hitbox Fixo Esqueleto 1
+        inimigos[2].hitbox.x0 = inimigos[2].pos_x_sprite + 85;
+        inimigos[2].hitbox.x1 = inimigos[2].pos_x_sprite + inimigos[2].largura_sprite_tela - 80;
+        inimigos[2].hitbox.y0 = inimigos[2].pos_y_sprite + 70;
+        inimigos[2].hitbox.y1 = inimigos[2].pos_y_sprite + inimigos[2].altura_sprite_tela - 105;
+
+        // Hitbox Fixo Esqueleto 2
+        inimigos[2].hitbox.x2 = inimigos[2].pos_x_sprite_2 + 85;
+        inimigos[2].hitbox.x3 = inimigos[2].pos_x_sprite_2 + inimigos[2].largura_sprite_tela - 80;
+        inimigos[2].hitbox.y2 = inimigos[2].pos_y_sprite_2 + 70;
+        inimigos[2].hitbox.y3 = inimigos[2].pos_y_sprite_2 + inimigos[2].altura_sprite_tela - 105;
+    }
+
 }

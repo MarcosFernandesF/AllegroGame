@@ -2,7 +2,6 @@
 
 void init_elisabeth(struct Personagem* elisabeth)
 {
-	elisabeth->vivo = 1;
 	elisabeth->vidas_1 = 3;
 	elisabeth->altura_sprite = 32;
 	elisabeth->largura_sprite = 32;
@@ -79,8 +78,11 @@ void init_jack(struct Personagem* jack)
 
 void init_dwarf(struct Personagem dwarf[])
 {
-	dwarf[0].vivo = 1;
+	// Inicializei um por um porque estava bugando 
+	dwarf[0].vivo_1[0] = 1; dwarf[0].vivo_1[1] = 1;
+	dwarf[0].vivo_2[0] = 1; dwarf[0].vivo_2[1] = 1; 
 	dwarf[0].vidas_1 = 1;
+	dwarf[0].vidas_2 = 1;
 	dwarf[0].altura_sprite = 32;
 	dwarf[0].largura_sprite = 38;
 	dwarf[0].altura_sprite_tela = 112;
@@ -118,8 +120,8 @@ void init_dwarf(struct Personagem dwarf[])
 	dwarf[0].animacao[2].frames_max = 8;
 
 	// Morte
-	dwarf[0].animacao[3].col_atual_old = 0;
-	dwarf[0].animacao[3].col_atual = 0;
+	dwarf[0].animacao[3].col_atual_old = 4;
+	dwarf[0].animacao[3].col_atual = 4;
 	dwarf[0].animacao[3].lin_atual = 7;
 	dwarf[0].animacao[3].col_folha = 6;
 	dwarf[0].animacao[3].lin_folha = 0;
@@ -130,8 +132,8 @@ void init_dwarf(struct Personagem dwarf[])
 
 void init_minotauro(struct Personagem minotauro[])
 {
-	minotauro[1].vivo = 1;
-	minotauro[1].vidas_1 = 1;
+	minotauro[1].vivo_1[2] = 1;
+	minotauro[1].vidas_1 = 1000;
 	minotauro[1].altura_sprite = 96;
 	minotauro[1].largura_sprite = 96;
 	minotauro[1].altura_sprite_tela = 396;
@@ -167,8 +169,8 @@ void init_minotauro(struct Personagem minotauro[])
 	minotauro[1].animacao[2].frames_max = 8;
 
 	// Morte
-	minotauro[1].animacao[3].col_atual_old = 0;
-	minotauro[1].animacao[3].col_atual = 0;
+	minotauro[1].animacao[3].col_atual_old = 3;
+	minotauro[1].animacao[3].col_atual = 3;
 	minotauro[1].animacao[3].lin_atual = 19	;
 	minotauro[1].animacao[3].col_folha = 5;
 	minotauro[1].animacao[3].lin_folha = 0;
@@ -178,8 +180,10 @@ void init_minotauro(struct Personagem minotauro[])
 
 void init_esqueleto(struct Personagem esqueleto[])
 {
-	esqueleto[2].vivo = 1;
+	esqueleto[2].vivo_1[0] = 1; esqueleto[2].vivo_1[1] = 1;
+	esqueleto[2].vivo_2[0] = 1; esqueleto[2].vivo_2[1] = 1;
 	esqueleto[2].vidas_1 = 1;
+	esqueleto[2].vidas_2 = 1;
 	esqueleto[2].altura_sprite = 150;
 	esqueleto[2].largura_sprite = 150;
 	esqueleto[2].altura_sprite_tela = 230;
@@ -222,7 +226,7 @@ void init_esqueleto(struct Personagem esqueleto[])
 	// Morte
 	esqueleto[2].animacao[3].esqueleto = true;
 	esqueleto[2].animacao[3].col_atual_old = 15;
-	esqueleto[2].animacao[3].col_atual = 15;
+	esqueleto[2].animacao[3].col_atual = 21;
 	esqueleto[2].animacao[3].lin_atual = 0;
 	esqueleto[2].animacao[3].col_folha = 23;
 	esqueleto[2].animacao[3].lin_folha = 0;
