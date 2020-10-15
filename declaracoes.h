@@ -45,8 +45,8 @@ struct Personagem
 	struct Limites hitbox; // Limites de hitbox de cada personagem
 	int vivo_1[3]; // Vivo ou morto primeiro inimigo em cada fase
 	int vivo_2[3]; // Vivo ou morto segundo inimigo em cada fase
-	int vidas_1; // Vidas do primeiro personagem
-	int vidas_2; // Vidas do segundo personagem
+	int vidas_1[3]; // Vidas do primeiro personagem em cada fase
+	int vidas_2[3]; // Vidas do segundo personagem em cada fases
 	int altura_sprite; // Na folha
 	int largura_sprite;  // Na folha
 	int altura_sprite_tela; // Na tela
