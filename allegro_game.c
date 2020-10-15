@@ -45,6 +45,7 @@ ALLEGRO_BITMAP* jack_png = NULL; // Folha de sprite do Jack
 ALLEGRO_BITMAP* fundo_png = NULL; // Fundo do mapa
 ALLEGRO_BITMAP* folha_bloco = NULL; // Folha de sprite dos blocos
 ALLEGRO_BITMAP* inimigos_png[3] = { NULL, NULL }; // Folha de sprite dos inimigos
+ALLEGRO_FONT* font130 = NULL; // Fonte do titulo
 ALLEGRO_FONT* font100 = NULL; // Fonte
 ALLEGRO_FONT* font85 = NULL; // Fonte
 ALLEGRO_FONT* font30 = NULL; // Fonte
@@ -53,7 +54,6 @@ ALLEGRO_BITMAP* menu_fundo1 = NULL; // Parte 1 do fundo do menu
 ALLEGRO_BITMAP* menu_fundo2 = NULL; // Parte 2 do fundo do menu
 ALLEGRO_BITMAP* menu_play = NULL; // Botao de play
 ALLEGRO_BITMAP* menu_ajuda = NULL; // Botao de ajuda
-ALLEGRO_FONT* fonte = NULL; // Fonte do titulo
 ALLEGRO_BITMAP* menu_sobre = NULL; // Botao de informacoes
 ALLEGRO_BITMAP* menu_historia = NULL; // Botao onde aparece a historia
 
@@ -115,18 +115,18 @@ int main()
 	bool win = false; // Saber se venceu o jogo
 	bool parado = true; // Variavel para saber se esta parado ou nao
 	int level = 0; // Variavel para saber qual a fase atual
-	int indice;  // Indices utilizados em todo o codigo
+	int indice,indice2;  // Indices utilizados em todo o codigo
 	int acao; // Utilizado para saber qual a ação necessaria do personagem
-  int vel_gravidade = 0; // Velocidade da gravidade
-  int caindo=1; // Variavel que controla se ta caindo
-  int gravidade = 1; // Gravidade
-  int pulo = 0; // Variavel de controle para o pulo
-  int pulo_limite = 0; // Posicao anterior ao pular
+    int vel_gravidade = 0; // Velocidade da gravidade
+    int caindo=1; // Variavel que controla se ta caindo
+    int gravidade = 1; // Gravidade
+    int pulo = 0; // Variavel de controle para o pulo
+    int pulo_limite = 0; // Posicao anterior ao pular
 
 	struct Personagem elisabeth;  // Personagem Elisabeth
 	struct Personagem jack; // Personagem Jack
 	struct Personagem inimigos[3]; // Personagem secundario
-  struct Cenario mapa; // Mapa
+    struct Cenario mapa; // Mapa
 
 	init_elisabeth(&elisabeth);	//Inicialização da Elisabeth
 	init_jack(&jack); // Inicialização do Jack
@@ -234,7 +234,6 @@ int main()
 
 			if (keys[ESPACO]) // Comando para bater
 			{
-				printf("%d", elisabeth.vidas_1[0]);
 				acao = 2;
 				parado = false;
 				animacao_beth_jack(&elisabeth, acao, false);
@@ -314,29 +313,33 @@ int main()
 			}
 		}
         // MENU INICIAL
-		if (level==0)
+		if (level == 0)
         {
             if (evento.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP) // Se desfizer o clique
             {
+				// Play
                 if (evento.mouse.x <= 490 && evento.mouse.x >= 390 &&
                     evento.mouse.y <= height/2 +200 && evento.mouse.y >= height/2 +100)
                     {
                     level++;
                     }
+				// Como jogar
                 if (evento.mouse.x <= 610 && evento.mouse.x >= 510 &&
                     evento.mouse.y <= height/2 +200 && evento.mouse.y >= height/2 +100)
                     {
                     al_show_native_message_box(display, "Ajuda", "Como Jogar", como_jogar, NULL, ALLEGRO_MESSAGEBOX_WARN);
                     }
+				// Créditos
                 if (evento.mouse.x <= 610 && evento.mouse.x >= 510 &&
                     evento.mouse.y <= height/2 +320 && evento.mouse.y >= height/2 +220)
                     {
-                    al_show_native_message_box(display, "INFORMACOES", "Créditos", sobre, NULL, ALLEGRO_MESSAGEBOX_WARN);
+                    al_show_native_message_box(display, "Informações", "Créditos", sobre, NULL, ALLEGRO_MESSAGEBOX_WARN);
                     }
+				// História
                  if (evento.mouse.x <= 490 && evento.mouse.x >= 390 &&
                     evento.mouse.y <= height/2 +320 && evento.mouse.y >= height/2 +220)
                     {
-                    al_show_native_message_box(display, "Historia", "O Resgate de Jack", historia, NULL, ALLEGRO_MESSAGEBOX_WARN);
+                    al_show_native_message_box(display, "História", "O Resgate de Jack", historia, NULL, ALLEGRO_MESSAGEBOX_WARN);
                     }
             }
 		}
@@ -359,50 +362,50 @@ int main()
 					// Dependendo do level desenha blocos diferentes
 					switch(level)
 			  {
-            case 0:
-                al_draw_scaled_bitmap(menu_fundo1, 0, 0, 576, 324, 0, 0, width, height, 0);
-                al_draw_scaled_bitmap(menu_fundo2, 0, 0, 576, 324, 0, 0, width, height, 0);
-                al_draw_text(fonte, al_map_rgb(255, 255, 255), width/2, 50, ALLEGRO_ALIGN_CENTRE, "O");
-                al_draw_text(fonte, al_map_rgb(255, 255, 255), width/2, 150, ALLEGRO_ALIGN_CENTRE, "RESGATE");
-                al_draw_text(fonte, al_map_rgb(255, 255, 255), width/2, 250, ALLEGRO_ALIGN_CENTRE, "DE");
-                al_draw_text(fonte, al_map_rgb(255, 255, 255), width/2, 350, ALLEGRO_ALIGN_CENTRE, "JACK");
-                al_draw_scaled_bitmap(menu_ajuda, 0, 0, 214, 215, 510, height/2 +100, 100, 100, 0);
-                al_draw_scaled_bitmap(menu_play, 0, 0, 214, 215, 390, height/2 +100, 100, 100, 0);
-                al_draw_scaled_bitmap(menu_sobre, 0, 0, 300, 301, 510, height/2 +220, 100, 100, 0);
-                al_draw_scaled_bitmap(menu_historia, 0, 0, 214, 215, 390, height/2 +220, 100, 100, 0);
-                break;
-             case 1:
-                for (int i = 0; i<mapa.MapaTam; i++)
-                {
-                  al_draw_scaled_bitmap(folha_bloco, (mapa.BlocoTam) * (mapa1[i]), 0, mapa.BlocoTam, mapa.BlocoTam,
-                  ((mapa.BlocoTam)+((mapa.BlocoTam)/2)) * (i%(mapa.MapaColuna)), ((mapa.BlocoTam)+((mapa.BlocoTam)/2)) * (i/(mapa.MapaColuna)),
-                   (mapa.BlocoTam)+((mapa.BlocoTam)/2), (mapa.BlocoTam)+((mapa.BlocoTam)/2), 0);
-                }
-                // Transição de Fase
-                if(elisabeth.pos_x_sprite + elisabeth.inicio_x > width &&
-                  elisabeth.pos_y_sprite + elisabeth.inicio_y < height - 680)
-                {
-                  elisabeth.pos_x_sprite = 0;
-                  elisabeth.pos_y_sprite = 0;
-                  level++;
-                }
-                  break;
-              case 2:
-                for (int j = 0; j<mapa.MapaTam; j++)
-                {
-                  al_draw_scaled_bitmap(folha_bloco, (mapa.BlocoTam) * (mapa2[j]), 0, mapa.BlocoTam, mapa.BlocoTam,
-                  ((mapa.BlocoTam)+((mapa.BlocoTam)/2)) * (j%(mapa.MapaColuna)), ((mapa.BlocoTam)+((mapa.BlocoTam)/2)) * (j/(mapa.MapaColuna)),
-                   (mapa.BlocoTam)+((mapa.BlocoTam)/2), (mapa.BlocoTam)+((mapa.BlocoTam)/2), 0);
-                }
-                // Transição de Fase
-                if(elisabeth.pos_x_sprite + elisabeth.inicio_x > width &&
-                  elisabeth.pos_y_sprite + elisabeth.inicio_y < height - 75)
-                    {
-                      elisabeth.pos_x_sprite = 0;
-                      elisabeth.pos_y_sprite = 0;
-                      level++;
-                    }
-                    break;
+				case 0:
+					al_draw_scaled_bitmap(menu_fundo1, 0, 0, 576, 324, 0, 0, width, height, 0);
+					al_draw_scaled_bitmap(menu_fundo2, 0, 0, 576, 324, 0, 0, width, height, 0);
+					al_draw_text(font130, al_map_rgb(255, 255, 255), width/2, 50, ALLEGRO_ALIGN_CENTRE, "O");
+					al_draw_text(font130, al_map_rgb(255, 255, 255), width/2, 150, ALLEGRO_ALIGN_CENTRE, "RESGATE");
+					al_draw_text(font130, al_map_rgb(255, 255, 255), width/2, 250, ALLEGRO_ALIGN_CENTRE, "DE");
+					al_draw_text(font130, al_map_rgb(255, 255, 255), width/2, 350, ALLEGRO_ALIGN_CENTRE, "JACK");
+					al_draw_scaled_bitmap(menu_ajuda, 0, 0, 214, 215, 510, height/2 +100, 100, 100, 0);
+					al_draw_scaled_bitmap(menu_play, 0, 0, 214, 215, 390, height/2 +100, 100, 100, 0);
+					al_draw_scaled_bitmap(menu_sobre, 0, 0, 300, 301, 510, height/2 +220, 100, 100, 0);
+					al_draw_scaled_bitmap(menu_historia, 0, 0, 214, 215, 390, height/2 +220, 100, 100, 0);
+					break;
+				 case 1:
+					for (int i = 0; i<mapa.MapaTam; i++)
+					{
+					  al_draw_scaled_bitmap(folha_bloco, (mapa.BlocoTam) * (mapa1[i]), 0, mapa.BlocoTam, mapa.BlocoTam,
+					  ((mapa.BlocoTam)+((mapa.BlocoTam)/2)) * (i%(mapa.MapaColuna)), ((mapa.BlocoTam)+((mapa.BlocoTam)/2)) * (i/(mapa.MapaColuna)),
+					   (mapa.BlocoTam)+((mapa.BlocoTam)/2), (mapa.BlocoTam)+((mapa.BlocoTam)/2), 0);
+					}
+					// Transição de Fase
+					if(elisabeth.pos_x_sprite + elisabeth.inicio_x > width &&
+					  elisabeth.pos_y_sprite + elisabeth.inicio_y < height - 680)
+					{
+					  elisabeth.pos_x_sprite = 0;
+					  elisabeth.pos_y_sprite = 0;
+					  level++;
+					}
+					  break;
+				 case 2:
+					for (int j = 0; j<mapa.MapaTam; j++)
+					{
+					  al_draw_scaled_bitmap(folha_bloco, (mapa.BlocoTam) * (mapa2[j]), 0, mapa.BlocoTam, mapa.BlocoTam,
+					  ((mapa.BlocoTam)+((mapa.BlocoTam)/2)) * (j%(mapa.MapaColuna)), ((mapa.BlocoTam)+((mapa.BlocoTam)/2)) * (j/(mapa.MapaColuna)),
+					   (mapa.BlocoTam)+((mapa.BlocoTam)/2), (mapa.BlocoTam)+((mapa.BlocoTam)/2), 0);
+					}
+					// Transição de Fase
+					if(elisabeth.pos_x_sprite + elisabeth.inicio_x > width &&
+					  elisabeth.pos_y_sprite + elisabeth.inicio_y < height - 75)
+						{
+						  elisabeth.pos_x_sprite = 0;
+						  elisabeth.pos_y_sprite = 0;
+						  level++;
+						}
+						break;
                  case 3:
                     for (int i = 0; i < mapa.MapaTam; i++)
                     {
@@ -439,14 +442,16 @@ int main()
 
 	al_destroy_display(display);
 	al_destroy_timer(timer);
-	al_destroy_font(fonte);
 
 	al_destroy_bitmap(elisabeth_png);
 	al_destroy_bitmap(jack_png);
 	al_destroy_bitmap(inimigos_png[0]);
 	al_destroy_bitmap(inimigos_png[1]);
 	al_destroy_bitmap(inimigos_png[2]);
+
 	al_destroy_audio_stream(musica);
+
+	al_destroy_font(font130);
 	al_destroy_font(font100);
 	al_destroy_font(font85);
 	al_destroy_font(font30);
@@ -501,20 +506,27 @@ int inicializar()
 		error_msg("Falha ao inicializar addon da fonte");
 		return -1;
 	}
+
 	if (!al_init_ttf_addon())
 	{
 		error_msg("Falha ao inicializar ttf addon");
 		return -1;
 	}
 
-	font100 = al_load_font("sprites/Font/Planes_ValMore.ttf", 100, 0);
+	font130 = al_load_font("sprites/Font/fonte.ttf", 130, 0);
+	if (!font130) {
+		error_msg("Falha ao carregar fonte");
+		return -1;
+	}
+
+	font100 = al_load_font("sprites/Font/fonte.ttf", 100, 0);
 
 	if (!font100)
 	{
 		error_msg("Falha ao carregar a fonte");
 		return -1;
 	}
-	font85 = al_load_font("sprites/Font/Planes_ValMore.ttf", 85, 0);
+	font85 = al_load_font("sprites/Font/fonte.ttf", 85, 0);
 
 	if (!font85)
 	{
@@ -522,7 +534,7 @@ int inicializar()
 		return -1;
 	}
 	
-	font30 = al_load_font("sprites/Font/Planes_ValMore.ttf", 30, 0);
+	font30 = al_load_font("sprites/Font/fonte.ttf", 30, 0);
 
 	if (!font30)
 	{
@@ -559,7 +571,7 @@ int inicializar()
 		return 1;
 	}
 
-	/*musica = al_load_audio_stream("musicas/musica_principal.mp3", 4, 1024);
+	musica = al_load_audio_stream("musicas/musica_principal.mp3", 4, 1024);
 	if (!musica)
 	{
 		error_msg("Audio não carregado");
@@ -628,44 +640,37 @@ int inicializar()
 		error_msg("Falha ao carregar o fundo 1 do menu");
 		return -1;
 	}
+
 	menu_fundo2 = al_load_bitmap("sprites/menu/fundo2.png"); //Carregando parte 2 do fundo do menu
 	if (!menu_fundo2)
 	{
 		error_msg("Falha ao carregar o fundo 2 do menu");
 		return -1;
 	}
+
     menu_play = al_load_bitmap("sprites/menu/play.png"); //Carregando a imagem do botao de play
 	if (!menu_play)
 	{
 		error_msg("Falha ao carregar o botao de play do menu");
 		return -1;
 	}
+
 	menu_ajuda = al_load_bitmap("sprites/menu/ajuda.png"); //Carregando o background do jogo
 	if (!menu_play)
 	{
 		error_msg("Falha ao carregar o botao de ajuda do menu");
 		return -1;
 	}
+
     menu_sobre = al_load_bitmap("sprites/menu/sobre.png");
     if (!menu_sobre){
         error_msg("Falha ao carregar o botao de sobre no menu");
         return -1;
     }
+
     menu_historia = al_load_bitmap("sprites/menu/historia.png");
     if (!menu_historia){
         error_msg("Falha ao carregar o botao de historia do menu");
-        return -1;
-    }
-
-	al_init_font_addon();
-
-	if (!al_init_ttf_addon()){
-        error_msg("Falha ao inicializar add-on allegro_ttf");
-        return -1;
-    }
-    fonte = al_load_font("sprites/Font/fonte.ttf", 130, 0);
-    if (!fonte){
-        error_msg("Falha ao carregar fonte");
         return -1;
     }
 
