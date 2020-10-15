@@ -5,8 +5,6 @@ void init_elisabeth(struct Personagem* elisabeth)
 	elisabeth->vidas_1[0] = 3;
 	elisabeth->altura_sprite = 32;
 	elisabeth->largura_sprite = 32;
-	elisabeth->altura_sprite_tela = 112;
-	elisabeth->largura_sprite_tela = 112;
 	elisabeth->pos_x_sprite = 0;
 	elisabeth->pos_y_sprite = 0;
 	elisabeth->inicio_x = 50;
