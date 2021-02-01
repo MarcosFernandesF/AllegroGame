@@ -14,7 +14,7 @@ Esquerda: Seta para a esquerda
 Direita: Seta para direita
 Ataque:  Segurar barra de espaço
 
-===========================História============================
+===========================História=============================
 O Resgate de Jack
 
 O namorado de Elisabeth, Jack, é raptado. Então Elisabeth
