@@ -11,9 +11,9 @@ ter o seu amado de volta.
 
 ## Como Jogar: 
 
-Pulo: Seta pra cima
-Esquerda: Seta para a esquerda
-Direita: Seta para direita
+Pulo: Seta pra cima <br>
+Esquerda: Seta para a esquerda <br>
+Direita: Seta para direita <br>
 Ataque:  Segurar barra de espaço
 
 ## Créditos:
